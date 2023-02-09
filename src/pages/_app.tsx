@@ -1,11 +1,9 @@
-import { CssBaseline } from '@mui/material'
-import type { AppProps } from 'next/app'
+import type { AppProps } from 'next/app';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <>
-      <CssBaseline/>
-      <Component {...pageProps} />
-    </>
+    <Component {...pageProps} />
   )
 }
