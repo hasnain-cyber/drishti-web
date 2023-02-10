@@ -1,3 +1,61 @@
-.mainContainer {
-    color: var(--color-primary);
+.navhome {
+    color: var(--col1);
+    font-weight: 500;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 0.15em;
+    display: inline-block;
+    padding: 15px 20px;
+    position: relative;
+    font-family: var(--font3);
+}
+.navhover {
+    color: #000000;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 0.15em;
+    display: inline-block;
+    padding: 15px 20px;
+    position: relative;
+    font-family: var(--font3);
+}
+
+.navhover:hover {
+    color: var(--col1);
+}
+.navhover::before {
+    /* background: none repeat scroll 0 0 transparent; */
+    bottom: 5px;
+    content: "";
+    display: block;
+    height: 3px;
+    left: 50%;
+    position: absolute;
+    background: var(--grad1);
+    transition: width 0.3s ease 0s, left 0.3s ease 0s;
+    width: 0;
+}
+
+.navhover:hover::before {
+    width: 100%;
+    left: 0;
+}
+
+.loginbutton {
+    background: var(--grad2);
+    width: 100px;
+    height: 40px;
+    border: none;
+    border-radius: 20px;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    transition: all 0.3s ease 0s;
+    font-family: var(--font3);
+}
+
+.loginbutton:hover {
+    background: var(--col3);
+    color: var(--col1);
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.387);
 }
