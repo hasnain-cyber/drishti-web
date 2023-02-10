@@ -1,5 +1,10 @@
 :root {
-    --color-primary: #ff0000;
-    --color-secondary: #00ff00;
-    --color-tertiary: #0000ff;
+    --col1: #103ce7;
+    --col2: #64e9ff;
+    --col3: #ffffff;
+    --grad1: linear-gradient(90deg, var(--col1) 20%, var(--col2) 100%);
+    --grad2: linear-gradient(60deg, var(--col1) 60%, var(--col2) 100%);
+    --font1: 'Libre Franklin', sans-serif;
+    --font2: 'Montserrat', sans-serif;
+    --font3: 'Rubik', sans-serif;
 }
