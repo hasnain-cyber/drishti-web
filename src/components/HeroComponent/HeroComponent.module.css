@@ -62,11 +62,15 @@
     cursor: pointer;
     outline: none;
     margin: 0rem 0.3rem;
-    transition: all 0.3s ease;
+    transition: all 1s ease;
 }
 
 .hero__search__btn:hover {
     background: var(--grad1);
+}
+
+.hero__search__btn:active {
+    background: var(--grad2);
 }
 
 .hero__clear__btn {
@@ -74,6 +78,7 @@
     font-size: 1.5rem;
     font-weight: 700;
     margin-right: 0.5rem;
+    cursor: pointer;
 }
 
 .hero__clear__btn:hover {
