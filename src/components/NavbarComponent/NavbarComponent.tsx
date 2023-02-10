@@ -13,11 +13,11 @@ const NavbarComponent = () => {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
-                        <Nav.Link as={NavLink} href="#home" className={styles.navhover}>Home</Nav.Link>
+                        <Nav.Link as={NavLink} href="/" className={styles.navhover}>Home</Nav.Link>
                         <Nav.Link as={NavLink} href="#link" className={styles.navhover}>Link</Nav.Link>
                     </Nav>
                     <Nav>
-                        <Button className={styles.loginbutton}>Login</Button>
+                        <NavLink href="/login"><Button className={styles.loginbutton}>Login</Button></NavLink>
                     </Nav>
                 </Navbar.Collapse>
             </Container>

@@ -1,0 +1,122 @@
+.login {
+    height: 100vh;
+    width: 100%;
+    background: url(../../public/assets/graphics/back3.jpg) no-repeat center center/cover;
+    position: relative;
+}
+
+.overlay {
+    background: linear-gradient(90deg, var(--col1) 0%, #0000002e 100%);
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0.8;
+}
+
+.container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: var(--col3);
+    font-family: var(--font1);
+}
+
+.title h1 {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.login_card {
+    background-color: var(--col3);
+    padding: 6%;
+    border-radius: 5px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.511);
+    width: 380px;
+    margin: 0 auto;
+}
+
+.login_card_title {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    font-family: var(--font3);
+    /* color: var(--col1); */
+    font-weight: 500;
+}
+
+.login_card_body_input {
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.2rem;
+    border-bottom: 2px solid rgba(128, 128, 128, 0.486);
+    color: grey;
+    height: 2rem;
+}
+
+.login_card_body_input input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    font-size: 1rem;
+    font-family: var(--font3);
+    font-weight: 200;
+    color: grey;
+}
+
+.forgot {
+    text-align: right;
+    font-size: 0.8rem;
+    font-family: var(--font3);
+}
+.forgot a {
+    color: var(--col1);
+    text-decoration: none;
+}
+
+.sign {
+    text-align: center;
+    font-size: 0.8rem;
+    font-family: var(--font3);
+}
+
+.signup {
+    text-align: center;
+    font-size: 0.9rem;
+    font-family: var(--font3);
+}
+.signup a {
+    color: var(--col1);
+    text-decoration: none;
+}
+
+.loginbutton {
+    margin: 25px auto 15px auto;
+    background: var(--grad2);
+    width: 80%;
+    height: 40px;
+    border: none;
+    border-radius: 20px;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    transition: all 0.3s ease 0s;
+    font-family: var(--font3);
+}
+
+.loginbutton:hover {
+    background: var(--col3);
+    color: var(--col1);
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.387);
+}
