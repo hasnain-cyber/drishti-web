@@ -12,12 +12,13 @@ const NavbarComponent = () => {
                 <Navbar.Brand as={NavLink} href="/" className={styles.navhome}>DRISHTI</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="me-auto">
+                    <Nav className="d-flex align-items-center me-auto">
                         <Nav.Link as={NavLink} href="/" className={styles.navhover}>Home</Nav.Link>
                         <Nav.Link as={NavLink} href="#link" className={styles.navhover}>Link</Nav.Link>
                     </Nav>
-                    <Nav>
-                        <NavLink href="/login"><Button className={styles.loginbutton}>Login</Button></NavLink>
+                    <Nav className='d-flex align-items-center'>
+                        <Nav.Link as={NavLink} href="/signup" className={styles.navhover}>Sign Up</Nav.Link>
+                        <NavLink href="/login"><Button className={`mx-2 ${styles.loginbutton}`}>Login</Button></NavLink>
                     </Nav>
                 </Navbar.Collapse>
             </Container>
