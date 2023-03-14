@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { ChangeEvent } from 'react'
 import styles from './HeroComponent.module.css'
 
 export default function HeroComponent() {
     const [searchVal, setSearchVal] = React.useState('');
 
-    const handleInput = (e) => {
+    const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
         setSearchVal(e.target.value);
     }
 

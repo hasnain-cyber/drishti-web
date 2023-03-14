@@ -7,7 +7,7 @@ import { Button } from 'react-bootstrap';
 
 const NavbarComponent = () => {
     return (
-        <Navbar bg="light" expand="lg" fixed='top'>
+        <Navbar bg="light" expand="lg" sticky='top'>
             <Container>
                 <Navbar.Brand as={NavLink} href="/" className={styles.navhome}>DRISHTI</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
