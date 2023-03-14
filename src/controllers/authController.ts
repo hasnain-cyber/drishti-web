@@ -1,4 +1,3 @@
-import courseModel from "@/models/courseModel";
 import { NextApiRequest, NextApiResponse } from "next";
 import crypto from "crypto";
 import userModel, { EUserRole } from "@/models/userModel";
@@ -19,7 +18,7 @@ export async function loginUser(req: NextApiRequest, res: NextApiResponse) {
 
     const existingUser = await userModel.scan().where('email').eq(email).exec();
     if (existingUser.length === 0) {
-        res.status(400).json({ message: 'Email does not exist.' });
+        res.status(404).json({ message: 'Email does not exist.' });
         return;
     }
 
@@ -80,13 +79,13 @@ export async function updateUser(req: NextApiRequest, res: NextApiResponse) {
     const email = req.headers.authorization?.split(' ')[1].split(':')[0];
     const password = req.headers.authorization?.split(' ')[1].split(':')[1];
     if (!email || !password) {
-        res.status(400).json({ message: 'Email and password are required' });
+        res.status(400).json({ message: 'Email and password are required.' });
         return;
     }
 
     const users = await userModel.scan().where('email').eq(email).exec();
     if (users.length === 0) {
-        res.status(404).json({ message: 'User not found' });
+        res.status(404).json({ message: 'User not found.' });
         return;
     }
 
@@ -97,6 +96,7 @@ export async function updateUser(req: NextApiRequest, res: NextApiResponse) {
         return;
     }
 
+    // get the fields to update selectively from request body, so that someone could not maliciously modify other sensetive fields.
     const { name: newName, email: newEmail, password: newPassword } = req.body;
     if (newName) {
         user['name'] = newName;
@@ -126,7 +126,7 @@ export async function deleteUser(req: NextApiRequest, res: NextApiResponse) {
 
     const users = await userModel.scan().where('email').eq(email).exec();
     if (users.length === 0) {
-        res.status(404).json({ message: 'User not found' });
+        res.status(404).json({ message: 'User not found.' });
         return;
     }
 

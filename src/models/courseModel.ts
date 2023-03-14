@@ -1,7 +1,11 @@
 import dynamoose from 'dynamoose';
 
-const topicSchema = new dynamoose.Schema({
-    name: {
+const subTopicSchema = new dynamoose.Schema({
+    id: {
+        type: String,
+        required: true,
+    },
+    title: {
         type: String,
         required: true,
     },
@@ -11,11 +15,27 @@ const topicSchema = new dynamoose.Schema({
     },
 });
 
+const topicSchema = new dynamoose.Schema({
+    id: {
+        type: String,
+        required: true,
+    },
+    name: {
+        type: String,
+        required: true,
+    },
+    subTopics: {
+        type: Array,
+        schema: [subTopicSchema],
+        required: true,
+    },
+});
 
-const courseModel = dynamoose.model('Course', {
+export const courseSchema = {
     id: {
         type: String,
         hashKey: true,
+        required: true,
     },
     name: {
         type: String,
@@ -28,7 +48,8 @@ const courseModel = dynamoose.model('Course', {
     topics: {
         type: Array,
         schema: [topicSchema],
+        required: true,
     },
-});
+};
 
-export default courseModel;
+export default dynamoose.model('Course', courseSchema);
