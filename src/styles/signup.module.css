@@ -75,6 +75,11 @@
     color: grey;
 }
 
+.formControl:focus {
+    background-color: transparent;
+    box-shadow: none;
+}
+
 .forgot {
     text-align: right;
     font-size: 0.8rem;

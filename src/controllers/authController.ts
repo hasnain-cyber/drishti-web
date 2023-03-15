@@ -29,13 +29,15 @@ export async function loginUser(req: NextApiRequest, res: NextApiResponse) {
         return;
     }
 
-    res.status(200).json(user);
+    res.status(200).json({user});
 }
 
 export async function registerUser(req: NextApiRequest, res: NextApiResponse) {
     const { name } = req.body;
     const email = req.headers.authorization?.split(' ')[1].split(':')[0];
     const password = req.headers.authorization?.split(' ')[1].split(':')[1];
+
+    console.log(name, email, password);
 
     if (!name) {
         res.status(400).json({ message: 'Name is required' });
@@ -72,7 +74,7 @@ export async function registerUser(req: NextApiRequest, res: NextApiResponse) {
     });
 
     const newUser = await user.save();
-    res.status(201).json(newUser);
+    res.status(201).json({user: newUser});
 }
 
 export async function updateUser(req: NextApiRequest, res: NextApiResponse) {

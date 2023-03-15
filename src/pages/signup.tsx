@@ -1,9 +1,39 @@
 import Link from 'next/link'
-import React from 'react'
-import { Container, Col } from 'react-bootstrap'
-import styles from './../styles/signup.module.css'
+import React, { useState, FormEventHandler } from 'react'
+import { Container, Col, Form } from 'react-bootstrap'
+import styles from './../styles/signup.module.css';
+import authHandler from '@/apiHandlers/authHandler';
+import { useRouter } from 'next/router';
 
 export default function signup() {
+    const [name, setName] = useState<string>('')
+    const [email, setEmail] = useState<string>('')
+    const [password, setPassword] = useState<string>('')
+    const [confirmPassword, setConfirmPassword] = useState<string>('')
+
+    const router = useRouter();
+
+    const handleSubmitForm: FormEventHandler<HTMLFormElement> = (event) => {
+        event.preventDefault();
+
+        if (password !== confirmPassword) {
+            alert("Passwords don't match!")
+            return;
+        }
+
+        authHandler
+            .signup(name, email, password)
+            .then((response) => response.json())
+            .then((response) => {
+                console.log(response);
+                router.push(`/user/${response.user.id}`);
+            })
+            .catch((error) => {
+                console.log(error);
+                alert("Error creating user!")
+            });
+    }
+
     return (
         <div className={styles.login}>
             <div className={styles.overlay} />
@@ -14,27 +44,33 @@ export default function signup() {
                     <h1>evolve.</h1>
                 </Col>
                 <Col sm={12} md={6} lg={8} className={styles.login_card}>
-                    <div className={styles.login_card_title}>Sign Up</div>
-                    <div className={styles.login_card_body}>
-                        <div className={styles.login_card_body_input}>
-                            <i className="fas fa-user me-3" />
-                            <input type="text" placeholder="Username" />
+                    <Form onSubmit={handleSubmitForm}>
+                        <div className={styles.login_card_title}>Sign Up</div>
+                        <div className={styles.login_card_body}>
+                            <div className={styles.login_card_body_input}>
+                                <i className="fas fa-user me-3" />
+                                <Form.Control className={styles.formControl} required type="text" placeholder="Name" value={name} onChange={(event) => setName(event.target.value)} />
+                            </div>
+                            <div className={styles.login_card_body_input}>
+                                <i className="fas fa-envelope me-3" />
+                                <Form.Control className={styles.formControl} required type="text" placeholder="Email" value={email} onChange={(event) => setEmail(event.target.value)} />
+                            </div>
+                            <div className={styles.login_card_body_input}>
+                                <i className="fas fa-lock me-3" />
+                                <Form.Control className={styles.formControl} required type="password" placeholder="Password" value={password} onChange={(event) => setPassword(event.target.value)} />
+                            </div>
+                            <div className={styles.login_card_body_input}>
+                                <i className="fas fa-lock me-3" />
+                                <Form.Control className={styles.formControl} required type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} />
+                            </div>
+                            <div className={styles.sign}>
+                                <button type={'submit'} className={styles.loginbutton}>Sign Up</button>
+                            </div>
+                            <div className={styles.signup}>
+                                Have An Account? <Link href="/login">Sign In</Link>
+                            </div>
                         </div>
-                        <div className={styles.login_card_body_input}>
-                            <i className="fas fa-envelope me-3" />
-                            <input type="text" placeholder="Email" />
-                        </div>
-                        <div className={styles.login_card_body_input}>
-                            <i className="fas fa-lock me-3" />
-                            <input type="password" placeholder="Password" />
-                        </div>
-                        <div className={styles.sign}>
-                            <button className={styles.loginbutton}>Sign Up</button>
-                        </div>
-                        <div className={styles.signup}>
-                            Have An Account? <Link href="/login">Sign In</Link>
-                        </div>
-                    </div>
+                    </Form>
                     {/* Or use google login */}
                     {/* <div className={styles.login_card_footer}>
                         <div className={styles.login_card_footer_text}>

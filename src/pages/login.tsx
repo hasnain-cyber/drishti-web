@@ -1,9 +1,30 @@
+import React, { FormEventHandler, useState } from 'react';
 import Link from 'next/link'
-import React from 'react'
-import { Container, Col } from 'react-bootstrap'
+import { Container, Col, Form } from 'react-bootstrap'
 import styles from './../styles/login.module.css'
+import authHandler from '@/apiHandlers/authHandler';
+import { useRouter } from 'next/router';
 
 export default function login() {
+    const [email, setEmail] = useState<string>('')
+    const [password, setPassword] = useState<string>('')
+
+    const router = useRouter();
+
+    const handleSubmitForm: FormEventHandler<HTMLFormElement> = (event) => {
+        event.preventDefault();
+
+        authHandler.login(email, password)
+            .then((response) => response.json())
+            .then((response) => {
+                router.push(`/user/${response.user.id}`);
+            })
+            .catch((error) => {
+                console.log(error);
+                alert("Error logging in!");
+            });
+    }
+
     return (
         <div className={styles.login}>
             <div className={styles.overlay} />
@@ -14,26 +35,28 @@ export default function login() {
                     <h1>evolve.</h1>
                 </Col>
                 <Col sm={12} md={6} lg={8} className={styles.login_card}>
-                    <div className={styles.login_card_title}>Sign In</div>
-                    <div className={styles.login_card_body}>
-                        <div className={styles.login_card_body_input}>
-                            <i className="fas fa-envelope me-3" />
-                            <input type="text" placeholder="Email" />
+                    <Form onSubmit={handleSubmitForm}>
+                        <div className={styles.login_card_title}>Sign In</div>
+                        <div className={styles.login_card_body}>
+                            <div className={styles.login_card_body_input}>
+                                <i className="fas fa-envelope me-3" />
+                                <Form.Control required type="text" placeholder="Email" value={email} onChange={(event) => setEmail(event.target.value)} />
+                            </div>
+                            <div className={styles.login_card_body_input}>
+                                <i className="fas fa-lock me-3" />
+                                <Form.Control required type="password" placeholder="Password" value={password} onChange={(event) => setPassword(event.target.value)} />
+                            </div>
+                            <div className={styles.forgot}>
+                                <Link href="/forgot-password">Forgot Password?</Link>
+                            </div>
+                            <div className={styles.sign}>
+                                <button className={styles.loginbutton}>Sign In</button>
+                            </div>
+                            <div className={styles.signup}>
+                                <Link href="/signup">Don't Have An Account?</Link>
+                            </div>
                         </div>
-                        <div className={styles.login_card_body_input}>
-                            <i className="fas fa-lock me-3" />
-                            <input type="password" placeholder="Password" />
-                        </div>
-                        <div className={styles.forgot}>
-                            <Link href="/forgot-password">Forgot Password?</Link>
-                        </div>
-                        <div className={styles.sign}>
-                            <button className={styles.loginbutton}>Sign In</button>
-                        </div>
-                        <div className={styles.signup}>
-                            <Link href="/signup">Don't Have An Account?</Link>
-                        </div>
-                    </div>
+                    </Form>
                     {/* Or use google login */}
                     {/* <div className={styles.login_card_footer}>
                         <div className={styles.login_card_footer_text}>
