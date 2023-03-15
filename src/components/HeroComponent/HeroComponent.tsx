@@ -4,17 +4,13 @@ import { Form } from 'react-bootstrap';
 import styles from './HeroComponent.module.css'
 
 export default function HeroComponent() {
-    const [search, setSearch] = useState('');
-
-    const handleClearBtn = () => {
-        setSearch('');
-    }
+    const [searchVal, setSearchVal] = useState('');
 
     const router = useRouter();
     const handleSubmitForm: FormEventHandler<HTMLFormElement> = (event) => {
         event.preventDefault();
 
-        router.push(`/search/${search}`);
+        router.push(`/search?searchText=${searchVal}`);
     }
 
 
@@ -26,12 +22,11 @@ export default function HeroComponent() {
                 <p className={styles.hero__text}>Excel · Lead · Be extraordinary · Be known</p>
                 <div className={styles.hero__search}>
                     <Form className='d-flex align-items-center w-100' onSubmit={handleSubmitForm}>
-                        <Form.Control required type="text" className={styles.hero__search__input} placeholder="Search" value={search} onChange={(event) => setSearch(event.target.value)} />
-                        <i className={`fa-solid fa-xmark ${styles.hero__clear__btn}`} onClick={handleClearBtn}></i>
+                        <Form.Control required type="text" className={styles.hero__search__input} placeholder="Search" value={searchVal} onChange={(event) => setSearchVal(event.target.value)} />
+                        <i className={`fa-solid fa-xmark ${styles.hero__clear__btn}`} onClick={() => setSearchVal('')}></i>
                         <button type='submit' className={styles.hero__search__btn}>Search</button>
                     </Form>
                 </div>
-
             </div>
         </div>
     )

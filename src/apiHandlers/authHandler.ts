@@ -1,6 +1,6 @@
 export default {
-    signup: (name: string, email: string, password: string) => {
-        return fetch(`api/auth`, {
+    signup: async (name: string, email: string, password: string) => {
+        const response = await fetch(`api/auth`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -12,14 +12,16 @@ export default {
                 password,
             }),
         });
+        return response.json();
     },
-    login: (email: string, password: string) => {
-        return fetch(`api/auth`, {
+    login: async(email: string, password: string) => {
+        const response = await fetch(`api/auth`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 "Authorization": `Basic ${email}:${password}`
             }
         });
+        return response.json();
     }
 }

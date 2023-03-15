@@ -13,7 +13,7 @@ export default function signup() {
 
     const router = useRouter();
 
-    const handleSubmitForm: FormEventHandler<HTMLFormElement> = (event) => {
+    const handleSubmitForm: FormEventHandler<HTMLFormElement> = async (event) => {
         event.preventDefault();
 
         if (password !== confirmPassword) {
@@ -21,17 +21,8 @@ export default function signup() {
             return;
         }
 
-        authHandler
-            .signup(name, email, password)
-            .then((response) => response.json())
-            .then((response) => {
-                console.log(response);
-                router.push(`/user/${response.user.id}`);
-            })
-            .catch((error) => {
-                console.log(error);
-                alert("Error creating user!")
-            });
+        const response = await authHandler.signup(name, email, password);
+        router.push(`/user/${response.user.id}`);
     }
 
     return (
