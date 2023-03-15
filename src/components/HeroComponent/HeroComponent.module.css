@@ -40,19 +40,22 @@
 }
 
 .hero__search__input {
-    width: 70%;
     height: 3rem;
     border: none;
-    border-radius: 1.5rem 0 0 1.5rem;
     padding: 0rem 1rem;
     font-size: 1rem;
     font-family: var(--font2);
     outline: none;
+
+    background-color: transparent;
+}
+
+.hero__search__input:focus {
+    box-shadow: none;
+    background-color: transparent;
 }
 
 .hero__search__btn {
-    width: 30%;
-    height: 2.5rem;
     border: none;
     border-radius: 1.5rem;
     background: var(--col1);
@@ -63,6 +66,7 @@
     outline: none;
     margin: 0rem 0.3rem;
     transition: all 1s ease;
+    padding: 0.5rem 1.5rem;
 }
 
 .hero__search__btn:hover {

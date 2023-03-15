@@ -83,6 +83,8 @@
     border-radius: 1.5rem;
     padding: 0.5rem 1rem;
     color: var(--col1);
+
+    cursor: pointer;
 }
 
 .active__filter {
