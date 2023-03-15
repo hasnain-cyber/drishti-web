@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
-import React, { ChangeEvent, useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react';
 import { Container } from 'react-bootstrap'
+import { useQuery } from 'react-query';
 import styles from '../../styles/search.module.css';
 
 enum TAB_MODES {
@@ -12,15 +13,27 @@ enum TAB_MODES {
 export default function search() {
     const [searchVal, setSearchVal] = React.useState('');
     const router = useRouter();
-    const { searchText } = router.query;
-    const [searchResults, setSearchResults] = useState([]);
+    const [searchText, setSearchText] = React.useState<string>('');
     useEffect(() => {
-        
-    }, [searchText])
+        if (router.isReady) {
+            setSearchText(router.query['searchText'] as string);
+        }
+    }, [router]);
+    const { data: searchResults, status: searchStatus } = useQuery(['search', searchText], async () => {
+        if (searchText.length > 0) {
+            const res = await fetch(`/api/search?searchText=${searchText}`);
+            return res.json();
+        }
+    });
 
-    const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
-        setSearchVal(e.target.value);
-    }
+    const [userSearchResults, setUserSearchResults] = useState([]);
+    const [courseSearchResults, setCourseSearchResults] = useState([]);
+    useEffect(() => {
+        if (searchResults) {
+            setUserSearchResults(searchResults.users);
+            setCourseSearchResults(searchResults.courses);
+        }
+    }, [searchResults])
 
     const handleClearBtn = () => {
         setSearchVal('');
@@ -33,7 +46,7 @@ export default function search() {
             <div className={styles.search_container}>
                 <Container>
                     <div className={styles.hero__search}>
-                        <input type="text" className={styles.hero__search__input} placeholder="Search for a Course" value={searchVal} onChange={handleInput} />
+                        <input type="text" className={styles.hero__search__input} placeholder="Search for a Course" value={searchVal} onChange={(event) => setSearchVal(event.target.value)} />
                         <i className={`fa-solid fa-xmark ${styles.hero__clear__btn}`} onClick={handleClearBtn}></i>
                         <button className={styles.hero__search__btn} onClick={handleClearBtn}>Search</button>
                     </div>
@@ -41,7 +54,7 @@ export default function search() {
             </div>
             <Container className='mb-3'>
                 <div className={styles.search__results}>
-                    <h1>Found <span className={styles.search__data}>125</span> Search Results Matching <span className={styles.search__data}>{searchText}</span></h1>
+                    <h1>Found <span className={styles.search__data}>{searchStatus === 'success' ? userSearchResults.length + courseSearchResults.length : 0}</span> Search Results Matching <span className={styles.search__data}>{searchText}</span></h1>
                 </div>
                 <div className="d-flex flex-wrap gap-3">
                     <div className={`${styles.search__filter} ${tabMode == TAB_MODES.ALL ? styles.active__filter : ''}`} onClick={() => setTabMode(TAB_MODES.ALL)}>
@@ -56,7 +69,10 @@ export default function search() {
                 </div>
             </Container>
             <Container>
-                Random container
+                {searchStatus === 'loading' ? <div>Loading...</div> : <></>}
+                {searchStatus === 'success' && (tabMode === TAB_MODES.ALL || tabMode === TAB_MODES.PROFESSORS) ? <div>{userSearchResults.map((element) => element['name'])}</div> : <></>}
+                {searchStatus === 'success' && (tabMode === TAB_MODES.ALL || tabMode === TAB_MODES.COURSES) ? <div>{courseSearchResults.map((element) => element['name'])}</div> : <></>}
+                {searchStatus === 'error' ? <div>Error loading the results...</div> : <></>}
             </Container>
         </div>
     )

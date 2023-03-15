@@ -27,4 +27,3 @@ export async function getMatches(req: NextApiRequest, res: NextApiResponse) {
 export default {
     getMatches
 };
-
