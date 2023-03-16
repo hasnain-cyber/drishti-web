@@ -1,8 +1,8 @@
-import searchHandler from '@/apiHandlers/searchHandler';
+import useCourses, { CourseType } from '@/hooks/useCourses';
+import useUsers, { UserType } from '@/hooks/useUsers';
 import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react';
 import { Container, Form } from 'react-bootstrap'
-import { useQuery } from 'react-query';
 import styles from '../styles/search.module.css';
 
 enum TAB_MODES {
@@ -12,23 +12,32 @@ enum TAB_MODES {
 }
 
 export default function search() {
-    const [searchVal, setSearchVal] = React.useState('');
+    const [searchVal, setSearchVal] = useState('');
     const router = useRouter();
-    const { data: searchResults, status: searchStatus } = useQuery(['search', router.query['searchText']], async () => {
-        const results = await searchHandler.findMatches(router.query['searchText'] as string);
-        return results;
-    }, {
-        enabled: !!router.query['searchText'],
-    });
-
-    const [userSearchResults, setUserSearchResults] = useState([]);
-    const [courseSearchResults, setCourseSearchResults] = useState([]);
+    const searchText = router.query['searchText'] as string;
+    const [searchResults, setSearchResults] = useState<{
+        users: UserType[],
+        courses: CourseType[],
+    }>({ users: [], courses: [] });
+    const { courses, coursesStatus } = useCourses();
+    const { users, usersStatus } = useUsers();
     useEffect(() => {
-        if (searchResults && searchResults.users && searchResults.courses) {
-            setUserSearchResults(searchResults.users);
-            setCourseSearchResults(searchResults.courses);
+        if (searchText && searchText.length > 0) {
+            let courseSearchResults: CourseType[] = [];
+            if (coursesStatus === 'success' && courses) {
+                courseSearchResults = courses.filter((element) => element['name'].toLowerCase().includes(searchText.toLowerCase()));
+            }
+
+            let userSearchResults: UserType[] = [];
+            if (usersStatus === 'success' && users) {
+                userSearchResults = users.filter((element) => element['name'].toLowerCase().includes(searchText.toLowerCase()));
+            }
+            setSearchResults({
+                users: userSearchResults,
+                courses: courseSearchResults,
+            });
         }
-    }, [searchResults])
+    }, [courses, coursesStatus, users, usersStatus, searchText]);
 
     const [tabMode, setTabMode] = React.useState(TAB_MODES.ALL);
 
@@ -43,7 +52,7 @@ export default function search() {
                 <Container>
                     <div className={styles.hero__search}>
                         <Form className='d-flex align-items-center w-100' onSubmit={handleSubmitForm}>
-                            <Form.Control type="text" className={styles.hero__search__input} placeholder="Search" value={searchVal} onChange={(event) => setSearchVal(event.target.value)} />
+                            <Form.Control required type="text" className={styles.hero__search__input} placeholder="Search" value={searchVal} onChange={(event) => setSearchVal(event.target.value)} />
                             <i className={`fa-solid fa-xmark ${styles.hero__clear__btn}`} onClick={() => setSearchVal('')}></i>
                             <button type="submit" className={styles.hero__search__btn}>Search</button>
                         </Form>
@@ -52,7 +61,7 @@ export default function search() {
             </div>
             <Container className='mb-3'>
                 <div className={styles.search__results}>
-                    <h1>Found <span className={styles.search__data}>{searchStatus === 'success' ? userSearchResults.length + courseSearchResults.length : 0}</span> Search Results Matching <span className={styles.search__data}>{router.query['searchText']}</span></h1>
+                    <h1>Found <span className={styles.search__data}>{searchResults.users.length + searchResults.courses.length}</span> Search Results Matching <span className={styles.search__data}>{router.query['searchText']}</span></h1>
                 </div>
                 <div className="d-flex flex-wrap gap-3">
                     <div className={`${styles.search__filter} ${tabMode == TAB_MODES.ALL ? styles.active__filter : ''}`} onClick={() => setTabMode(TAB_MODES.ALL)}>
@@ -67,11 +76,51 @@ export default function search() {
                 </div>
             </Container>
             <Container>
-                {searchStatus === 'loading' ? <div>Loading...</div> : <></>}
-                {searchStatus === 'success' && (tabMode === TAB_MODES.ALL || tabMode === TAB_MODES.PROFESSORS) ? <div>{userSearchResults.map((element) => element['name'])}</div> : <></>}
-                {searchStatus === 'success' && (tabMode === TAB_MODES.ALL || tabMode === TAB_MODES.COURSES) ? <div>{courseSearchResults.map((element) => element['name'])}</div> : <></>}
-                {searchStatus === 'error' ? <div>Error loading the results...</div> : <></>}
+                {usersStatus === 'loading' || coursesStatus === 'loading' ? <div>Loading...</div> : <></>}
+                {usersStatus === 'success' && (tabMode === TAB_MODES.ALL || tabMode === TAB_MODES.PROFESSORS) ? <div>{searchResults.courses.map((element) => <CourseCard key={element['id']} courseId={element['id']} />)}</div> : <></>}
+                {coursesStatus === 'success' && (tabMode === TAB_MODES.ALL || tabMode === TAB_MODES.COURSES) ? <div>{searchResults.users.map((element) => <UserCard key={element['id']} userId={element['id']} />)}</div> : <></>}
+                {usersStatus === 'error' || coursesStatus === 'error' ? <div>Error loading the results...</div> : <></>}
             </Container>
+        </div>
+    )
+}
+
+const CourseCard = (props: {
+    courseId: string,
+}) => {
+    const { courses, coursesStatus } = useCourses();
+    const [course, setCourse] = useState<CourseType | null>(null);
+    useEffect(() => {
+        if (courses) {
+            const course = courses.find((element) => element.id === props.courseId);
+            // assign null again if course is not found.
+            setCourse(course || null);
+        }
+    }, [courses]);
+
+    return (
+        <div>
+            {course ? course['name'] : ''}
+        </div>
+    )
+}
+
+const UserCard = (props: {
+    userId: string,
+}) => {
+    const { users, usersStatus } = useUsers();
+    const [user, setUser] = useState<UserType | null>(null);
+    useEffect(() => {
+        if (users) {
+            const user = users.find((element) => element.id === props.userId);
+            // assign null again if user is not found.
+            setUser(user || null);
+        }
+    }, [users]);
+
+    return (
+        <div>
+            {user ? user['name'] : ''}
         </div>
     )
 }
