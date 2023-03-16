@@ -41,9 +41,24 @@ export default function () {
         },
     });
 
+    const updateUserMutation = useMutation(async (user: {
+        id: string,
+        name: string,
+        email: string
+    }) => {
+        const response = await authHandler.updateUser(user.id, user.name, user.email);
+        localStorage.setItem('user', JSON.stringify(response.user));
+        return response.user;
+    }, {
+        onSuccess: () => {
+            queryClient.invalidateQueries('user');
+        },
+    });
+
     return {
         user: (user && user.data) || null,
         login: loginMutation.mutateAsync,
         logout: logoutMutation.mutateAsync,
+        updateUser: updateUserMutation.mutateAsync,
     };
 };

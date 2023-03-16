@@ -17,8 +17,6 @@ const index = () => {
 
     const { user: loggedInUser } = useAuth();
 
-    console.log(loggedInUser);
-
     return (
         <div>
             <h1>{user && user['name']}</h1>
