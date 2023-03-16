@@ -26,11 +26,9 @@ const userModel = dynamoose.model('User', {
         type: String,
         required: true,
     },
-    verified: {
-        type: Boolean
-    },
     role: {
-        type: Number
+        type: Number,
+        required: true,
     }
 });
 

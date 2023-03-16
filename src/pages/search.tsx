@@ -1,5 +1,6 @@
 import useCourses, { CourseType } from '@/hooks/useCourses';
 import useUsers, { UserType } from '@/hooks/useUsers';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react';
 import { Container, Form } from 'react-bootstrap'
@@ -98,8 +99,10 @@ const CourseCard = (props: {
         }
     }, [courses]);
 
+    const router = useRouter();
+
     return (
-        <div>
+        <div onClick={() => router.push(`courses/${props.courseId}`)} role={'button'}>
             {course ? course['name'] : ''}
         </div>
     )
@@ -118,8 +121,10 @@ const UserCard = (props: {
         }
     }, [users]);
 
+    const router = useRouter();
+
     return (
-        <div>
+        <div onClick={() => router.push(`users/${props.userId}`)} role={'button'}>
             {user ? user['name'] : ''}
         </div>
     )

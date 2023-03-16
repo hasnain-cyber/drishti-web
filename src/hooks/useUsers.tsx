@@ -6,7 +6,7 @@ export interface UserType {
     name: string,
 }
 
-const useCourses = () => {
+export default function () {
     const { data, status } = useQuery<UserType[], Error>('users', async () => {
         const users = await usersHandler.getAllUsers();
         return users;
@@ -14,5 +14,3 @@ const useCourses = () => {
 
     return { users: data, usersStatus: status };
 }
-
-export default useCourses;

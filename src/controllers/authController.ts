@@ -29,7 +29,14 @@ export async function loginUser(req: NextApiRequest, res: NextApiResponse) {
         return;
     }
 
-    res.status(200).json({user});
+    res.status(200).json({
+        user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            role: user.role
+        }
+    });
 }
 
 export async function registerUser(req: NextApiRequest, res: NextApiResponse) {
@@ -74,7 +81,7 @@ export async function registerUser(req: NextApiRequest, res: NextApiResponse) {
     });
 
     const newUser = await user.save();
-    res.status(201).json({user: newUser});
+    res.status(201).json({ user: newUser });
 }
 
 export async function updateUser(req: NextApiRequest, res: NextApiResponse) {

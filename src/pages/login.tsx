@@ -2,20 +2,21 @@ import React, { FormEventHandler, useState } from 'react';
 import Link from 'next/link'
 import { Container, Col, Form } from 'react-bootstrap'
 import styles from './../styles/login.module.css'
-import authHandler from '@/apiHandlers/authHandler';
 import { useRouter } from 'next/router';
+import useAuth from '@/hooks/useAuth';
 
 export default function login() {
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
 
     const router = useRouter();
+    const { login } = useAuth();
 
     const handleSubmitForm: FormEventHandler<HTMLFormElement> = async (event) => {
         event.preventDefault();
 
-        const response = await authHandler.login(email, password);
-        router.push(`/user/${response.user.id}`);
+        const user = await login({ email, password });
+        router.push(`/users/${user.id}`);
     }
 
     return (
