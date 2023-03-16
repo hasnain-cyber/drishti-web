@@ -2,7 +2,7 @@ import Link from 'next/link'
 import React, { useState, FormEventHandler } from 'react'
 import { Container, Col, Form } from 'react-bootstrap'
 import styles from './../styles/signup.module.css';
-import authHandler from '@/apiHandlers/authHandler';
+import authHandler from '@/frontend/apiHandlers/authHandler';
 import { useRouter } from 'next/router';
 
 export default function signup() {

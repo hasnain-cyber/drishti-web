@@ -1,5 +1,5 @@
-import useCourses, { CourseType } from '@/hooks/useCourses';
-import useUsers, { UserType } from '@/hooks/useUsers';
+import useCourses, { CourseType } from '@/frontend/hooks/useCourses';
+import useUsers, { UserType } from '@/frontend/hooks/useUsers';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react';

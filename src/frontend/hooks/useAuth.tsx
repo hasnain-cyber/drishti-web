@@ -1,4 +1,4 @@
-import authHandler from '@/apiHandlers/authHandler';
+import authHandler from '@/frontend/apiHandlers/authHandler';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 
 export interface LoggedInUser {
@@ -18,7 +18,7 @@ export default function () {
         }
         return null;
     });
-    
+
 
     const loginMutation = useMutation(async (credentials: {
         email: string,

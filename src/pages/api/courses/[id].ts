@@ -1,4 +1,4 @@
-import coursesController from "@/controllers/coursesController";
+import coursesController from "@/backend/controllers/coursesController";
 import { NextApiRequest, NextApiResponse } from "next";
 
 

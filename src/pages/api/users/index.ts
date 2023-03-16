@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import usersController from '@/controllers/usersController';
+import usersController from '@/backend/controllers/usersController';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
     switch (req.method) {

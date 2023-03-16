@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import coursesController from '@/controllers/coursesController';
+import coursesController from '@/backend/controllers/coursesController';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {

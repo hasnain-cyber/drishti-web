@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import crypto from "crypto";
-import userModel, { EUserRole } from "@/models/userModel";
+import userModel, {EUserRole} from '../models/userModel';
 
 export async function loginUser(req: NextApiRequest, res: NextApiResponse) {
     const email = req.headers.authorization?.split(' ')[1].split(':')[0];

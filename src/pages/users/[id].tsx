@@ -1,5 +1,5 @@
-import useAuth from "@/hooks/useAuth";
-import useUsers, { UserType } from "@/hooks/useUsers";
+import useAuth from "@/frontend/hooks/useAuth";
+import useUsers, { UserType } from "@/frontend/hooks/useUsers";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 

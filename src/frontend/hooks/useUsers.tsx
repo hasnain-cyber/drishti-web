@@ -1,4 +1,4 @@
-import usersHandler from '@/apiHandlers/usersHandler';
+import usersHandler from '@/frontend/apiHandlers/usersHandler';
 import { useQuery } from 'react-query';
 
 export interface UserType {

@@ -1,4 +1,4 @@
-import courseModel from "@/models/courseModel";
+import courseModel from "@/backend/models/courseModel";
 import { NextApiRequest, NextApiResponse } from "next";
 import crypto from "crypto";
 

@@ -1,4 +1,4 @@
-import coursesHandler from '@/apiHandlers/coursesHandler';
+import coursesHandler from '@/frontend/apiHandlers/coursesHandler';
 import { useQuery } from 'react-query';
 
 export interface CourseType {
