@@ -4,6 +4,8 @@ import { useQuery } from 'react-query';
 export interface UserType {
     id: string,
     name: string,
+    email: string,
+    about: string,
 }
 
 export default function () {

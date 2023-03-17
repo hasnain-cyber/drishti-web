@@ -4,6 +4,8 @@ import { useQuery } from 'react-query';
 export interface CourseType {
     id: string,
     name: string,
+    description: string,
+    ownerId: string,
 }
 
 const useCourses = () => {

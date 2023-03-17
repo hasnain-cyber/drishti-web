@@ -2,6 +2,7 @@
     --col1: #103ce7;
     --col2: #64e9ff;
     --col3: #ffffff;
+    --col4: #a7a7a7;
     --grad1: linear-gradient(90deg, var(--col1) 20%, var(--col2) 100%);
     --grad2: linear-gradient(60deg, var(--col1) 60%, var(--col2) 100%);
     --grad3: linear-gradient(180deg, var(--col1) 0%, var(--col2) 100%);
