@@ -78,8 +78,8 @@ export default function search() {
             </Container>
             <Container>
                 {usersStatus === 'loading' || coursesStatus === 'loading' ? <div>Loading...</div> : <></>}
-                {usersStatus === 'success' && (tabMode === TAB_MODES.ALL || tabMode === TAB_MODES.PROFESSORS) ? <div>{searchResults.courses.map((element) => <CourseCard key={element['id']} courseId={element['id']} />)}</div> : <></>}
-                {coursesStatus === 'success' && (tabMode === TAB_MODES.ALL || tabMode === TAB_MODES.COURSES) ? <div>{searchResults.users.map((element) => <UserCard key={element['id']} userId={element['id']} />)}</div> : <></>}
+                {usersStatus === 'success' && (tabMode === TAB_MODES.ALL || tabMode === TAB_MODES.PROFESSORS) ? <div>{searchResults.users.map((element) => <UserCard key={element['id']} userId={element['id']} />)}</div> : <></>}
+                {coursesStatus === 'success' && (tabMode === TAB_MODES.ALL || tabMode === TAB_MODES.COURSES) ? <div>{searchResults.courses.map((element) => <CourseCard key={element['id']} courseId={element['id']} />)}</div> : <></>}
                 {usersStatus === 'error' || coursesStatus === 'error' ? <div>Error loading the results...</div> : <></>}
             </Container>
         </div>
