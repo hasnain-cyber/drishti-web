@@ -5,7 +5,8 @@ export interface UserType {
     id: string,
     name: string,
     email: string,
-    about: string,
+    department: string,
+    about: [],
 }
 
 export default function () {

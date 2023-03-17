@@ -62,29 +62,54 @@ export default function search() {
       </div>
       <Container className='mb-3'>
         <div className={styles.search__results}>
-          <h1>Found <span className={styles.search__data}>{searchResults.users.length + searchResults.courses.length}</span> Search Results Matching <span className={styles.search__data}>{router.query['searchText']}</span></h1>
+          <h1>Found <span className={styles.search__data}>{searchResults.users.length + searchResults.courses.length}</span> Search Results Matching <span className={styles.search__data}>"{router.query['searchText']}"</span></h1>
         </div>
-        <div className={`d-flex flex-wrap gap-3 ${styles.filters}`}>
-          <div className={`${styles.search__filter} ${tabMode == TAB_MODES.ALL ? styles.active__filter : ''}`} onClick={() => setTabMode(TAB_MODES.ALL)}>
-            All
-          </div>
-          <div className={`${styles.search__filter}  ${tabMode == TAB_MODES.PROFESSORS ? styles.active__filter : ''}`} onClick={() => setTabMode(TAB_MODES.PROFESSORS)}>
-            Professors
-          </div>
-          <div className={`${styles.search__filter}  ${tabMode == TAB_MODES.COURSES ? styles.active__filter : ''}`} onClick={() => setTabMode(TAB_MODES.COURSES)}>
-            Courses
-          </div>
-        </div>
+        {
+          searchResults.users.length > 0 || searchResults.courses.length > 0 ?
+            <div className={`d-flex flex-wrap gap-3 ${styles.filters}`}>
+              <div className={`${styles.search__filter} ${tabMode == TAB_MODES.ALL ? styles.active__filter : ''}`} onClick={() => setTabMode(TAB_MODES.ALL)}>
+                All
+              </div>
+              <div className={`${styles.search__filter}  ${tabMode == TAB_MODES.PROFESSORS ? styles.active__filter : ''}`} onClick={() => setTabMode(TAB_MODES.PROFESSORS)}>
+                Professors
+              </div>
+              <div className={`${styles.search__filter}  ${tabMode == TAB_MODES.COURSES ? styles.active__filter : ''}`} onClick={() => setTabMode(TAB_MODES.COURSES)}>
+                Courses
+              </div>
+            </div>
+            :
+            <></>
+        }
       </Container>
       <Container className={`d-flex flex-wrap justify-content-center`}>
-        {usersStatus === 'loading' || coursesStatus === 'loading' ? <div>Loading...</div> : <></>}
-        {usersStatus === 'success' && (tabMode === TAB_MODES.ALL || tabMode === TAB_MODES.PROFESSORS) ? <div>{searchResults.users.map((element) => <UserCard key={element['id']} userId={element['id']} />)}</div> : <></>}
+        {usersStatus === 'loading' || coursesStatus === 'loading' ?
+          // render 6 dummy SkeletonCards
+          // <>
+          // {[...Array(6)].map((_, index) => {
+          //   return (
+          //     <div><SkeletonCard nullId='555' /></div>
+          //   )
+          // })}
+          // </>
+          "Loading..."
+          : 
+          <></>
+          }
+        {usersStatus === 'success' && (tabMode === TAB_MODES.ALL || tabMode === TAB_MODES.PROFESSORS) ?
+          searchResults.users.length > 0 || tabMode === TAB_MODES.ALL ?
+            <div>{searchResults.users.map((element) => <UserCard key={element['id']} userId={element['id']} />)}</div>
+            :
+            <div className={styles.no__results}>No Proffessors Found</div>
+          : <></>}
         {coursesStatus === 'success' && (tabMode === TAB_MODES.ALL || tabMode === TAB_MODES.COURSES) ?
-          [...Array(5)].map((_, index) => {
-            return (
-              <div>{searchResults.courses.map((element) => <CourseCard key={element['id']} courseId={element['id']} />)}</div>
-            )
-          })
+          searchResults.courses.length > 0 || tabMode === TAB_MODES.ALL ?
+            [...Array(5)].map((_, index) => {
+              return (
+                <div>{searchResults.courses.map((element) => <CourseCard key={element['id']} courseId={element['id']} />)}</div>
+              )
+            })
+            :
+            <div className={styles.no__results}>No Courses Found</div>
           :
           <></>}
         {usersStatus === 'error' || coursesStatus === 'error' ? <div>Error loading the results...</div> : <></>}
@@ -146,7 +171,6 @@ const UserCard = (props: {
   }, [users]);
 
   const router = useRouter();
-  console.log(user);
   return (
     <div>
       {user ?
@@ -156,12 +180,11 @@ const UserCard = (props: {
               <div className={`d-flex`}>
                 <div className={styles.avatar}><i className="fa-solid fa-user"></i></div>
                 <div className={styles.result__content}>
-                  <div className={styles.result__title}>Abhinav Yadav</div>
-                  <div>
-                    <div className={styles.result__instructor}>Department: <span>Electrical Engineering</span></div>
-                    <div className={styles.result__instructor}>Email ID: <span>ce200004001@iiti.ac.in</span></div>
-                    <div className={styles.result__instructor}>Professor ID: <span>200004001</span></div>
-                  </div>
+                  <div className={styles.result__title}>{user['name']}</div>
+                  {/* <div className={styles.result__subtitle}>{course['description']}</div> */}
+                  <div className={styles.result__instructor}>Department: <span>{user['department']}</span></div>
+                  <div className={styles.result__instructor}>Email ID: <span>{user['email']}</span></div>
+                  <div className={styles.result__instructor}>Professor ID: <span>{user['id']}</span></div>
                 </div>
               </div>
             </Card.Text>
@@ -171,5 +194,36 @@ const UserCard = (props: {
         ''
       }
     </div>
+  )
+}
+
+const SkeletonCard = (props: {
+  nullId: string,
+}) => {
+  return (
+    <Card className={`${styles.coursecard} ${styles.skeleton_card}`}>
+      <Card.Body>
+        <Card.Text>
+          <div className={`d-flex`}>
+            <div className={`${styles.avatar}`}>
+              <div className={`${styles.skeleton} ${styles.skeleton_avatar}`} />
+            </div>
+            <div className={`${styles.result__content}`}>
+              <div className={`${styles.result__title}`}>
+                <div className={`${styles.skeleton} ${styles.skeleton_text}`} />
+                <div className={`${styles.skeleton} ${styles.skeleton_text}`} />
+              </div>
+              <div className={`${styles.result__subtitle}`}>
+                <div className={`${styles.skeleton} ${styles.skeleton_text}`} />
+                <div className={`${styles.skeleton} ${styles.skeleton_text}`} />
+                <div className={`${styles.skeleton} ${styles.skeleton_text}`} />
+                <div className={`${styles.skeleton} ${styles.skeleton_text}`} />
+              </div>
+              <div className={`${styles.result__instructor}`}><div className={`${styles.skeleton} ${styles.skeleton_text}`} /></div>
+            </div>
+          </div>
+        </Card.Text>
+      </Card.Body>
+    </Card>
   )
 }
