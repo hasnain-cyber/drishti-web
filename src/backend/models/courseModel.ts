@@ -50,6 +50,10 @@ export const courseSchema = {
         schema: [topicSchema],
         required: true,
     },
+    ownerId: {
+        type: String,
+        required: true,
+    }
 };
 
 export default dynamoose.model('Course', courseSchema);

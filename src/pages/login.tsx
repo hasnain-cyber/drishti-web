@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Container, Col, Form } from 'react-bootstrap'
 import styles from './../styles/login.module.css'
 import { useRouter } from 'next/router';
-import useAuth from '@/hooks/useAuth';
+import useAuth from '@/frontend/hooks/useAuth';
 
 export default function login() {
     const [email, setEmail] = useState<string>('')
