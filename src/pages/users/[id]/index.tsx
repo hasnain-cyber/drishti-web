@@ -150,7 +150,7 @@ const CourseCard = () => {
             <Card className={`${styles.coursecard}`} onClick={() => router.push(`courses/falanademkana`)} role={'button'}>
                 <Card.Body>
                     <Card.Text>
-                        <div className={`d-flex`}>
+                        <div className={`d-flex ${styles.card__text}`}>
                             <div className={styles.avatar}><i className="fa-solid fa-book-open"></i></div>
                             <div className={styles.result__content}>
                                 <div className={styles.result__title}>Random Course Name</div>
