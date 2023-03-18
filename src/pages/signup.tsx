@@ -22,7 +22,7 @@ export default function signup() {
         }
 
         const response = await authHandler.signup(name, email, password);
-        router.push(`/user/${response.user.id}`);
+        router.push(`/users/${response.user.id}`);
     }
 
     return (
