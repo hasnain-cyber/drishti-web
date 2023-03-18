@@ -2,6 +2,7 @@ import useAuth from "@/frontend/hooks/useAuth";
 import useUsers, { UserType } from "@/frontend/hooks/useUsers";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { Card } from "react-bootstrap";
 import styles from "../../../styles/profile.module.css"
 
 const index = () => {
@@ -114,9 +115,14 @@ const index = () => {
 
                         <div className={`${styles.right__element}`}>
                             <h1>Courses</h1>
-                            <p>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis quam voluptatibus, assumenda numquam cumque optio quisquam unde ab iusto nulla quae inventore, consequuntur, fugiat quasi beatae rerum quaerat suscipit praesentium quo illo earum debitis non. Veniam labore provident dicta quaerat dolorum veritatis culpa fugiat quos hic? Vero nesciunt alias voluptatum recusandae voluptates officiis impedit consectetur omnis facilis est? Id, reiciendis recusandae! Iure, fuga dolor?
-                            </p>
+                            {/* Render 6 Course Cards */}
+                            {
+                                [1, 2, 3, 4, 5, 6].map((element) => {
+                                    return (
+                                        <CourseCard />
+                                    );
+                                })
+                            }
                         </div>
                     </div>
 
@@ -126,4 +132,41 @@ const index = () => {
     );
 };
 
+const CourseCard = () => {
+    // const { courses, coursesStatus } = useCourses();
+    // const [course, setCourse] = useState<CourseType | null>(null);
+    // useEffect(() => {
+    //     if (courses) {
+    //         const course = courses.find((element) => element.id === props.courseId);
+    //         // assign null again if course is not found.
+    //         setCourse(course || null);
+
+    //     }
+    // }, [courses]);
+
+    const router = useRouter();
+    return (
+        <div>
+            <Card className={`${styles.coursecard}`} onClick={() => router.push(`courses/falanademkana`)} role={'button'}>
+                <Card.Body>
+                    <Card.Text>
+                        <div className={`d-flex`}>
+                            <div className={styles.avatar}><i className="fa-solid fa-book-open"></i></div>
+                            <div className={styles.result__content}>
+                                <div className={styles.result__title}>Random Course Name</div>
+                                <div className={styles.result__subtitle}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis veritatis iste odit ad deserunt eaque a provident nisi sapiente recusandae.</div>
+                                <div className={styles.topics}>
+                                    <div className={styles.topic}>Topic 1</div>
+                                    <div className={styles.topic}>Topic 2</div>
+                                    <div className={styles.topic}>Topic 3</div>
+                                </div>
+                                <div className={styles.result__instructor}>Uploaded By: <span>Dr. Anubhav Singh Bassi</span></div>
+                            </div>
+                        </div>
+                    </Card.Text>
+                </Card.Body>
+            </Card>
+        </div>
+    )
+}
 export default index;

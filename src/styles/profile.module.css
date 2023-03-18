@@ -86,9 +86,9 @@
 }
 
 .social__link__name h3 {
-   font-size: 1rem;
-   margin-bottom: 0;
-   color: #ADADAD;
+    font-size: 1rem;
+    margin-bottom: 0;
+    color: #ADADAD;
 }
 
 .social__link:hover {
@@ -112,6 +112,9 @@
     padding: 30px;
     text-align: center;
     margin-top: 30px;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 80px;
 }
 
 .profile__left__container {
@@ -153,12 +156,19 @@
     color: var(--col1);
     margin: 0.5rem;
     cursor: pointer;
+    transition: 0.3s;
+    z-index: 1;
 }
 
 .domain h3 {
     font-size: 0.8rem;
     font-weight: 400;
     margin-bottom: 0;
+}
+
+.domain:hover {
+    background-color: var(--col1);
+    color: #fff;
 }
 
 /* Right Navigation */
@@ -194,13 +204,14 @@
 }
 
 /* Courses */
+
 .coursecard {
-    width: clamp(300px, 95%, 600px);
+    width: 100%;
     border: 0;
     border-radius: 1.5rem;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     padding: 1rem;
-    margin: 1.5rem auto;
+    margin: 0.5rem auto;
     height: 100%;
     transition: 0.3s;
 }
@@ -209,6 +220,7 @@
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
     transform: scale(1.02);
 }
+
 .avatar {
     display: flex;
     align-items: center;
@@ -238,6 +250,29 @@
 
 .result__subtitle {
     margin-bottom: 0.5rem;
+}
+
+.topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.topic {
+    display: flex;
+    align-items: center;
+    font-family: var(--font3);
+    border-radius: 1.5rem;
+    font-size: 0.8rem;
+    padding: 2px 20px;
+    /* border: 2px solid black; */
+    color: black;
+    background-color: var(--col2);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    margin: 10px 2px;
+    cursor: pointer;
+    transition: 0.3s;
+    z-index: 1;
 }
 
 .result__instructor {
