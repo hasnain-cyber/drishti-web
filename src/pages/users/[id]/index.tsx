@@ -26,6 +26,16 @@ const index = () => {
             <button>Edit2</button> */}
             {/* Starting with Profile Page */}
 
+            <div className={`${styles.edit__button} d-flex align-items-center`} onClick={() => router.push(`/users/${userId}/edit`)}>
+                <i className="fa-solid fa-edit"></i>
+                Edit Profile
+            </div>
+
+            {/* {loggedInUser && loggedInUser['id'] === userId &&
+                    <div className={`${styles.edit__button}`}>
+                        <i className="fa-solid fa-edit"></i>
+                    </div>
+                } */}
             <div className={`${styles.profile__container}`}>
                 <img className={`${styles.cover__image}`} src="/assets/profile/cover.jpg" />
                 <div className={`${styles.main__container}`}>
@@ -156,9 +166,9 @@ const CourseCard = () => {
                                 <div className={styles.result__title}>Random Course Name</div>
                                 <div className={styles.result__subtitle}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis veritatis iste odit ad deserunt eaque a provident nisi sapiente recusandae.</div>
                                 <div className={styles.topics}>
-                                    <div className={styles.topic}>Topic 1</div>
-                                    <div className={styles.topic}>Topic 2</div>
-                                    <div className={styles.topic}>Topic 3</div>
+                                    <div className={styles.topic}>Tag 1</div>
+                                    <div className={styles.topic}>Tag 2</div>
+                                    <div className={styles.topic}>Tag 3</div>
                                 </div>
                                 <div className={styles.result__instructor}>Uploaded By: <span>Dr. Anubhav Singh Bassi</span></div>
                             </div>
