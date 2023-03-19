@@ -122,7 +122,36 @@ const edit = () => {
                             </Form>
                         </div>
                     </div>
-                    
+                    <div className={`${styles.edit__main__container}`} id="security_tab">
+                        <h1>Security</h1>
+                        <p>Update Your Security Information</p>
+                        <div className={`${styles.container__form}`}>
+                            <Form>
+                                <Form.Group className="mb-3" controlId="formBasicEmail">
+                                    <Form.Label>Email Address</Form.Label>
+                                    <Form.Control type="email" placeholder="anubhav.singh@iiti.ac.in" disabled className={`${styles.text__input}`} />
+                                </Form.Group>
+                                <Form.Group className="mb-3" controlId="formBasicPassword">
+                                    <Form.Label>Current Password</Form.Label>
+                                    <Form.Control type="password" placeholder="Enter Your Current Password" className={`${styles.text__input}`} />
+                                </Form.Group>
+
+                                <Form.Group className="mb-3" controlId="formBasicNewPassword">
+                                    <Form.Label>New Password</Form.Label>
+                                    <Form.Control type="password" placeholder="Enter Your New Password" className={`${styles.text__input}`} />
+                                </Form.Group>
+
+                                <Form.Group className="mb-3" controlId="formBasicConfirmPassword">
+                                    <Form.Label>Confirm Password</Form.Label>
+                                    <Form.Control type="password" placeholder="Confirm Your New Password" className={`${styles.text__input}`} />
+                                </Form.Group>
+
+                                <Button variant="primary" type="submit" className={`mt-4 ${styles.upload__dp}`}>
+                                    Submit
+                                </Button>
+                            </Form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
