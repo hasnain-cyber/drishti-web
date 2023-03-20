@@ -1,0 +1,20 @@
+.courses__body {
+    background-color: #F6F6F6;
+    font-family: var(--font3);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+.top__container {
+    background-color: #fff;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    /* border-bottom: var(--col1) 2px solid; */
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.2);
+}
