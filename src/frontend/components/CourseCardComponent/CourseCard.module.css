@@ -1,0 +1,43 @@
+.courseCard {
+    width: 300px;
+    border-radius: 0;
+    border: none;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    min-height: 425px;
+    margin: 20px 0;
+    cursor: pointer;
+}
+
+.courseCard img {
+    border-radius: 0;
+    width: 100%;
+    height: 200px;
+}
+
+.tag p {
+    font-size: 1rem;
+    margin-bottom: 0px;
+}
+
+.title h3 {
+    font-size: 1.5rem;
+}
+
+.result__instructor {
+    font-family: var(--font2);
+    font-size: 0.9rem;
+}
+
+.result__instructor span {
+    font-weight: 600;
+}
+
+.courseCard i {
+    color: var(--col1);
+}
+
+.courseCard:hover {
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.300);
+    transform: scale(1.01);
+    transition: all 0.3s ease-in-out;
+}

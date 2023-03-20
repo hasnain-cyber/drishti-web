@@ -14,7 +14,7 @@ const NavbarComponent = () => {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="d-flex align-items-center me-auto">
                         <Nav.Link as={NavLink} href="/" className={styles.navhover}>Home</Nav.Link>
-                        <Nav.Link as={NavLink} href="#link" className={styles.navhover}>Link</Nav.Link>
+                        <Nav.Link as={NavLink} href="/courses" className={styles.navhover}>Courses</Nav.Link>
                     </Nav>
                     <Nav className='d-flex align-items-center'>
                         <Nav.Link as={NavLink} href="/signup" className={styles.navhover}>Sign Up</Nav.Link>

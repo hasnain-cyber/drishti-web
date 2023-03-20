@@ -235,7 +235,7 @@ const CourseCard = () => {
                         <div className={`d-flex ${styles.card__text}`}>
                             <div className={styles.avatar}><i className="fa-solid fa-book-open"></i></div>
                             <div className={styles.result__content}>
-                                <div className={styles.result__title}>Random Course Name</div>
+                                <div className={styles.result__title} role="button">Random Course Name</div>
                                 <div className={styles.result__subtitle}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis veritatis iste odit ad deserunt eaque a provident nisi sapiente recusandae.</div>
                                 <div className="d-flex justify-content-between flex-wrap">
                                     <div>
