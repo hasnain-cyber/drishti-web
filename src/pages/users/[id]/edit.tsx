@@ -1,7 +1,7 @@
 import useAuth from "@/frontend/hooks/useAuth";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Container, Card } from "react-bootstrap";
 import styles from "../../../styles/editprofile.module.css"
 
 const edit = () => {
@@ -20,10 +20,13 @@ const edit = () => {
         tabContent.forEach((content) => {
             content.classList.remove(styles.active_tab);
         });
+
         const tabId = e.target.id;
+
+        // get the tab with className edit__main__container and id = tabId
         const tab = document.getElementById(tabId);
-        console.log(tab);
         tab && tab.classList.add(styles.active_tab);
+
     }
 
 
@@ -54,12 +57,12 @@ const edit = () => {
                     </div>
 
                     {/* Go Back */}
-                    <div className={`d-flex justify-content-center ${styles.edit__sidebar__item} ${styles.save__button}`}>
+                    <div className={`d-flex justify-content-center ${styles.edit__sidebar__item} ${styles.save__button}`} onClick={() => router.push(`/users/${id}`)}>
                         <i className="fa-solid fa-arrow-left"></i>
                         Go Back
                     </div>
                 </div>
-                
+
                 {/* Make a main container to display the content of the selected tab */}
                 <div className={`${styles.edit__main}`}>
                     <div className={`${styles.edit__main__container}`} id="profile_tab">
@@ -116,6 +119,12 @@ const edit = () => {
                                     </div>
                                 </Form.Group>
 
+                                {/* Add 10 rows text-area form control for About Me*/}
+                                <Form.Group className="mb-3" controlId="formBasicAbout">
+                                    <Form.Label>About Me</Form.Label>
+                                    <Form.Control as="textarea" rows={6} placeholder="About Me" className={`${styles.text__input}`} />
+                                </Form.Group>
+
                                 <Button variant="primary" type="submit" className={`mt-4 ${styles.upload__dp}`}>
                                     Submit
                                 </Button>
@@ -152,6 +161,21 @@ const edit = () => {
                             </Form>
                         </div>
                     </div>
+                    <div className={`${styles.edit__main__container} ${styles.active_tab}`} id="courses_tab">
+                        <h1>Courses</h1>
+                        <p>You can add, edit or delete your Courses from here!</p>
+                        <div className={`${styles.profile__picture}`}>
+                            <Button className={`${styles.remove__dp}`}> <i className="fa-solid fa-plus"></i> Add Course</Button>
+                        </div>
+                        <Container className={`${styles.edit__courses__container}`}>
+                            <h2>Your Courses: </h2>
+                            {[1, 2, 4, 5, 6].map((__) => {
+                                return (
+                                    <CourseCard />
+                                )
+                            })}
+                        </Container>
+                    </div>
                 </div>
             </div>
         </div>
@@ -187,6 +211,61 @@ const EditComponent = () => {
             }
         </div>
     );
+}
+
+
+const CourseCard = () => {
+    // const { courses, coursesStatus } = useCourses();
+    // const [course, setCourse] = useState<CourseType | null>(null);
+    // useEffect(() => {
+    //     if (courses) {
+    //         const course = courses.find((element) => element.id === props.courseId);
+    //         // assign null again if course is not found.
+    //         setCourse(course || null);
+
+    //     }
+    // }, [courses]);
+
+    const router = useRouter();
+    return (
+        <div>
+            <Card className={`${styles.coursecard}`} onClick={() => router.push(`courses/falanademkana`)}>
+                <Card.Body>
+                    <Card.Text>
+                        <div className={`d-flex ${styles.card__text}`}>
+                            <div className={styles.avatar}><i className="fa-solid fa-book-open"></i></div>
+                            <div className={styles.result__content}>
+                                <div className={styles.result__title}>Random Course Name</div>
+                                <div className={styles.result__subtitle}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis veritatis iste odit ad deserunt eaque a provident nisi sapiente recusandae.</div>
+                                <div className="d-flex justify-content-between flex-wrap">
+                                    <div>
+                                        <div className={styles.topics}>
+                                            <div className={styles.topic}>Tag 1</div>
+                                            <div className={styles.topic}>Tag 2</div>
+                                            <div className={styles.topic}>Tag 3</div>
+                                        </div>
+                                        <div className={styles.result__instructor}>Uploaded By: <span>Dr. Anubhav Singh Bassi</span></div>
+                                    </div>
+                                    <div>
+                                        {/* Edit Course */}
+                                        <div className={styles.course__button}>
+                                            <i className="fa-solid fa-edit"></i>
+                                            Edit Course
+                                        </div>
+                                        {/* Delete Course */}
+                                        <div className={styles.course__button}>
+                                            <i className="fa-solid fa-trash"></i>
+                                            Delete Course
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </Card.Text>
+                </Card.Body>
+            </Card>
+        </div>
+    )
 }
 
 export default edit;
