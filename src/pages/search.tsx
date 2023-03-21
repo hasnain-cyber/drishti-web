@@ -83,18 +83,10 @@ export default function search() {
       </Container>
       <Container className={`d-flex flex-wrap justify-content-center`}>
         {usersStatus === 'loading' || coursesStatus === 'loading' ?
-          // render 6 dummy SkeletonCards
-          // <>
-          // {[...Array(6)].map((_, index) => {
-          //   return (
-          //     <div><SkeletonCard nullId='555' /></div>
-          //   )
-          // })}
-          // </>
           "Loading..."
-          : 
+          :
           <></>
-          }
+        }
         {usersStatus === 'success' && (tabMode === TAB_MODES.ALL || tabMode === TAB_MODES.PROFESSORS) ?
           searchResults.users.length > 0 || tabMode === TAB_MODES.ALL ?
             <div>{searchResults.users.map((element) => <UserCard key={element['id']} userId={element['id']} />)}</div>

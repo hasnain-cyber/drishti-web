@@ -143,17 +143,6 @@ const index = () => {
 };
 
 const CourseCard = () => {
-    // const { courses, coursesStatus } = useCourses();
-    // const [course, setCourse] = useState<CourseType | null>(null);
-    // useEffect(() => {
-    //     if (courses) {
-    //         const course = courses.find((element) => element.id === props.courseId);
-    //         // assign null again if course is not found.
-    //         setCourse(course || null);
-
-    //     }
-    // }, [courses]);
-
     const router = useRouter();
     return (
         <div>
