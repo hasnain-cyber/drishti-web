@@ -12,7 +12,7 @@ export interface LoggedInUser {
 export default function () {
     const queryClient = useQueryClient();
 
-    const user = useQuery('user', () => {
+    const userData = useQuery('user', () => {
         const tempUser = localStorage.getItem('user');
         if (tempUser) {
             return JSON.parse(tempUser) as LoggedInUser;
@@ -57,7 +57,8 @@ export default function () {
     });
 
     return {
-        user: (user && user.data) || null,
+        userData: (userData && userData.data) || null,
+        userLoggedIn: userData && userData.data,
         login: loginMutation.mutateAsync,
         logout: logoutMutation.mutateAsync,
         updateUser: updateUserMutation.mutateAsync,

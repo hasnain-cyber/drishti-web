@@ -5,8 +5,8 @@ import jsonwebtoken from 'jsonwebtoken';
 import { LoggedInUser } from "@/frontend/hooks/useAuth";
 import { checkTokenValidity } from "../middlewares";
 
-const getSignedToken = (id: string, name: string, email: string, role: string) => {
-    return jsonwebtoken.sign({ id, name, email, role }, process.env.JWT_SECRET as string);
+export const getSignedToken = (id: string) => {
+    return jsonwebtoken.sign({ id }, process.env.JWT_SECRET as string);
 }
 
 export async function loginUser(req: NextApiRequest, res: NextApiResponse) {
@@ -39,7 +39,7 @@ export async function loginUser(req: NextApiRequest, res: NextApiResponse) {
         res.status(400).json({ message: 'Password is incorrect.' });
         return;
     }
-    const token = getSignedToken(user.id, user.name, user.email, user.role);
+    const token = getSignedToken(user.id);
 
     res.status(200).json({
         user: {
@@ -96,41 +96,12 @@ export async function registerUser(req: NextApiRequest, res: NextApiResponse) {
         name: user.name,
         email: user.email,
         role: user.role,
-        token: getSignedToken(user.id, user.name, user.email, user.role)
+        token: getSignedToken(user.id)
     }
 
     await user.save();
     res.status(201).json({
         user: clientSideUser
-    });
-}
-
-export async function updateUser(req: NextApiRequest, res: NextApiResponse) {
-    checkTokenValidity(req, res, async (decoded: any) => {
-        const users = await userModel.scan().where('email').eq(decoded.email).exec();
-        if (users.length === 0) {
-            res.status(404).json({ message: 'User not found.' });
-            return;
-        }
-
-        // get the fields to update selectively from request body, so that someone could not maliciously modify other sensetive fields.
-        const { name: newName, email: newEmail, password: newPassword } = req.body;
-        const user = users[0];
-        if (newName) {
-            user['name'] = newName;
-        }
-        if (newEmail) {
-            user['email'] = newEmail;
-        }
-        if (newPassword) {
-            const salt = crypto.randomBytes(16).toString('hex');
-            const hashedPassword = crypto.pbkdf2Sync(newPassword, salt, 1000, 64, 'sha512').toString('hex');
-            user['hashedPassword'] = hashedPassword;
-            user['salt'] = salt;
-        }
-
-        const updatedUser = await user.save();
-        res.status(200).json(updatedUser);
     });
 }
 
@@ -153,6 +124,5 @@ export async function deleteUser(req: NextApiRequest, res: NextApiResponse) {
 export default {
     loginUser,
     registerUser,
-    updateUser,
     deleteUser
 };

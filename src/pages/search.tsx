@@ -1,4 +1,4 @@
-import useCourses, { CourseType } from '@/frontend/hooks/useCourses';
+import useCourses, { CourseType } from '@/frontend/hooks/useGlobalCourses';
 import useUsers, { UserType } from '@/frontend/hooks/useUsers';
 import Link from 'next/link';
 import { useRouter } from 'next/router';

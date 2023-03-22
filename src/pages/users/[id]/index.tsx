@@ -1,41 +1,25 @@
 import useAuth from "@/frontend/hooks/useAuth";
-import useUsers, { UserType } from "@/frontend/hooks/useUsers";
+import useUserById from "@/frontend/hooks/useUserById";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 import { Card } from "react-bootstrap";
 import styles from "../../../styles/profile.module.css"
 
 const index = () => {
     const router = useRouter();
     const { id: userId } = router.query;
-    const [user, setUser] = useState<UserType | null>(null);
-    const { users, usersStatus } = useUsers();
-    useEffect(() => {
-        if (users && userId) {
-            const requiredUser = users.find((element) => element.id === userId);
-            setUser(requiredUser || null);
-        }
-    }, [users, userId]);
-
-    const { user: loggedInUser } = useAuth();
+    // user is the user whose profile is being viewed
+    const user = useUserById(userId as string);
+    // userData is the logged in user
+    const { userData, userLoggedIn } = useAuth();
 
     return (
         <div className={`${styles.profile__body}`}>
-            {/* <h1>{user && user['name']}</h1>
-            {loggedInUser && loggedInUser['id'] === userId && <button>Edit</button>}
-            <button>Edit2</button> */}
-            {/* Starting with Profile Page */}
-
-            <div className={`${styles.edit__button} d-flex align-items-center`} onClick={() => router.push(`/users/${userId}/edit`)}>
-                <i className="fa-solid fa-edit"></i>
-                Edit Profile
-            </div>
-
-            {/* {loggedInUser && loggedInUser['id'] === userId &&
-                    <div className={`${styles.edit__button}`}>
-                        <i className="fa-solid fa-edit"></i>
-                    </div>
-                } */}
+            {userLoggedIn && userData?.id === user?.id && (
+                <div className={`${styles.edit__button} d-flex align-items-center`} onClick={() => router.push(`/users/${userId}/edit`)}>
+                    <i className="fa-solid fa-edit"></i>
+                    Edit Profile
+                </div>
+            )}
             <div className={`${styles.profile__container}`}>
                 <img className={`${styles.cover__image}`} src="/assets/profile/cover.jpg" />
                 <div className={`${styles.main__container}`}>
