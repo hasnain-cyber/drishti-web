@@ -1,11 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import userModel from '../models/userModel';
+import professorModel from '../models/userModels/professorModel';
 import crypto from "crypto";
 import { getSignedToken } from "./authController";
 import { LoggedInUser } from "@/frontend/hooks/useAuth";
 
 export async function getAllUsers(req: NextApiRequest, res: NextApiResponse) {
-    const users = await userModel.scan().exec();
+    const users = await professorModel.scan().exec();
     res.status(200).json(users);
 }
 
@@ -17,7 +17,7 @@ export async function updateUser(req: NextApiRequest, res: NextApiResponse) {
         return;
     }
 
-    const existingUser = await userModel.query().where('id').eq(id).exec();
+    const existingUser = await professorModel.query().where('id').eq(id).exec();
     if (existingUser.length > 0) {
         const requiredUser = existingUser[0];
         if (name) {
@@ -50,7 +50,7 @@ export async function updatePassword(req: NextApiRequest, res: NextApiResponse) 
         return;
     }
 
-    const existingUser = await userModel.query().where('id').eq(id).exec();
+    const existingUser = await professorModel.query().where('id').eq(id).exec();
     if (existingUser.length === 0) {
         res.status(404).json({ message: 'User does not exist.' });
         return;
@@ -74,7 +74,6 @@ export async function updatePassword(req: NextApiRequest, res: NextApiResponse) 
         id: requiredUser.id,
         name: requiredUser.name,
         email: requiredUser.email,
-        role: requiredUser.role,
         token
     }
     res.status(200).json({

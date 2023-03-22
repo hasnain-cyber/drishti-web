@@ -5,7 +5,6 @@ export interface LoggedInUser {
     id: string,
     name: string,
     email: string,
-    role: string,
     token: string,
 }
 
@@ -55,6 +54,8 @@ export default function () {
             queryClient.invalidateQueries('user');
         },
     });
+    
+    console.log("🚀 ~ file: useAuth.tsx:68 ~ userData.data:", userData.data)
 
     return {
         userData: (userData && userData.data) || null,
@@ -64,3 +65,4 @@ export default function () {
         updateUser: updateUserMutation.mutateAsync,
     };
 };
+    

@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import crypto from "crypto";
-import userModel, { EUserRole } from '../models/userModel';
+import professorModel from '../models/userModels/professorModel';
 import jsonwebtoken from 'jsonwebtoken';
 import { LoggedInUser } from "@/frontend/hooks/useAuth";
 import { checkTokenValidity } from "../middlewares";
@@ -27,7 +27,7 @@ export async function loginUser(req: NextApiRequest, res: NextApiResponse) {
         return;
     }
 
-    const existingUser = await userModel.scan().where('email').eq(email).exec();
+    const existingUser = await professorModel.scan().where('email').eq(email).exec();
     if (existingUser.length === 0) {
         res.status(404).json({ message: 'Email does not exist.' });
         return;
@@ -46,7 +46,6 @@ export async function loginUser(req: NextApiRequest, res: NextApiResponse) {
             id: user.id,
             name: user.name,
             email: user.email,
-            role: user.role,
             token
         }
     });
@@ -72,7 +71,7 @@ export async function registerUser(req: NextApiRequest, res: NextApiResponse) {
         return;
     }
 
-    const existingUser = await userModel.scan().where('email').eq(email).exec();
+    const existingUser = await professorModel.scan().where('email').eq(email).exec();
     if (existingUser.length > 0) {
         res.status(400).json({ message: 'Email already in use.' });
         return;
@@ -81,14 +80,13 @@ export async function registerUser(req: NextApiRequest, res: NextApiResponse) {
     const salt = crypto.randomBytes(16).toString('hex');
     const hashedPassword = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
 
-    const user = new userModel({
+    const user = new professorModel({
         id: crypto.randomUUID(),
         name,
         email,
         hashedPassword,
         salt,
-        verified: false,
-        role: EUserRole.Professor
+        verified: false
     });
 
     const clientSideUser: LoggedInUser = {
@@ -107,7 +105,7 @@ export async function registerUser(req: NextApiRequest, res: NextApiResponse) {
 
 export async function deleteUser(req: NextApiRequest, res: NextApiResponse) {
     checkTokenValidity(req, res, async (decoded: any) => {
-        const users = await userModel.scan().where('email').eq(decoded.email).exec();
+        const users = await professorModel.scan().where('email').eq(decoded.email).exec();
         if (users.length === 0) {
             res.status(404).json({ message: 'User not found.' });
             return;
