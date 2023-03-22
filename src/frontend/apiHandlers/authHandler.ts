@@ -14,7 +14,7 @@ export default {
         });
         return response.json();
     },
-    login: async(email: string, password: string) => {
+    login: async (email: string, password: string) => {
         const response = await fetch(`api/auth`, {
             method: 'GET',
             headers: {
@@ -24,16 +24,24 @@ export default {
         });
         return response.json();
     },
-    updateUser: async (id: string, name: string, email: string) => {
-        const response = await fetch(`${window.location.origin}/api/users/${id}`, {
+    updateProfile: async (token: string, name: string, email: string, department: string, institute: string, contactNumber: string, linkedIn: {
+        name: string, 
+        url: string
+    }, about: string) => {
+        const response = await fetch(`${window.location.origin}/api/users/edit/general`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({
-                id,
                 name,
-                email
+                email,
+                department,
+                institute,
+                contactNumber,
+                linkedIn,
+                about
             })
         });
         return response.json();

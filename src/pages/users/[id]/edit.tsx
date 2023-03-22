@@ -70,7 +70,7 @@ const edit = () => {
 }
 
 const PofileTab = () => {
-    const { userData } = useAuth();
+    const { userData, updateProfile } = useAuth();
 
     const [email, setEmail] = useState("");
     const [name, setName] = useState("");
@@ -81,6 +81,7 @@ const PofileTab = () => {
         name: '',
         url: ''
     });
+    const [about, setAbout] = useState("");
 
     React.useEffect(() => {
         if (userData) {
@@ -93,13 +94,30 @@ const PofileTab = () => {
                 name: userData.linkedIn.name,
                 url: userData.linkedIn.url
             });
+            setAbout(userData.about);
         }
     }, [userData]);
 
     const handleSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        
-        
+
+        if (userData) {
+            updateProfile({
+                email,
+                name,
+                department,
+                institute,
+                contactNumber,
+                linkedIn,
+                about,
+                token: userData.token,
+                id: userData.id
+            }).then(() => {
+                console.log("Profile Updated");
+            }).catch((err) => {
+                console.log(err);
+            });
+        }
     }
 
     return (
@@ -170,7 +188,7 @@ const PofileTab = () => {
                     {/* Add 10 rows text-area form control for About Me*/}
                     <Form.Group className="mb-3" controlId="formBasicAbout">
                         <Form.Label>About Me</Form.Label>
-                        <Form.Control as="textarea" rows={6} placeholder="About Me" className={`${styles.text__input}`} />
+                        <Form.Control as="textarea" rows={6} value={about} onChange={event => setAbout(event.target.value)} className={`${styles.text__input}`} />
                     </Form.Group>
 
                     <Button variant="primary" type="submit" className={`mt-4 ${styles.upload__dp}`}>

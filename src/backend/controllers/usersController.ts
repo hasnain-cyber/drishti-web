@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import professorModel from '../models/userModels/professorModel';
 import crypto from "crypto";
-import { getSignedToken } from "./authController";
+import { generateSignedToken } from "./authController";
 import { LoggedInUser } from "@/frontend/hooks/useAuth";
 
 export async function getAllUsers(req: NextApiRequest, res: NextApiResponse) {
@@ -10,7 +10,7 @@ export async function getAllUsers(req: NextApiRequest, res: NextApiResponse) {
 }
 
 export async function updateUser(req: NextApiRequest, res: NextApiResponse) {
-    const { id, name, email } = req.body;
+    const { id, name, email, department, institute, contactNumber, linkedIn, about } = req.body;
 
     if (!id) {
         res.status(400).json({ message: 'Id is required' });
@@ -26,14 +26,37 @@ export async function updateUser(req: NextApiRequest, res: NextApiResponse) {
         if (email) {
             requiredUser.email = email;
         }
+        if (department) {
+            requiredUser.department = department;
+        }
+        if (institute) {
+            requiredUser.institute = institute;
+        }
+        if (contactNumber) {
+            requiredUser.contactNumber = contactNumber;
+        }
+        if (linkedIn) {
+            requiredUser.linkedIn = linkedIn;
+        }
+        if (about) {
+            requiredUser.about = about;
+        }
+
         await requiredUser.save();
+        const clientSideUser: LoggedInUser = {
+            id: requiredUser.id,
+            name: requiredUser.name,
+            email: requiredUser.email,
+            department: requiredUser.department,
+            institute: requiredUser.institute,
+            contactNumber: requiredUser.contactNumber,
+            linkedIn: requiredUser.linkedIn,
+            about: requiredUser.about,
+            token: generateSignedToken(requiredUser.id)
+        }
+
         res.status(200).json({
-            user: {
-                id: requiredUser.id,
-                name: requiredUser.name,
-                email: requiredUser.email,
-                role: requiredUser.role
-            }
+            user: clientSideUser
         });
     } else {
         res.status(404).json({ message: 'User does not exist.' });
@@ -67,13 +90,18 @@ export async function updatePassword(req: NextApiRequest, res: NextApiResponse) 
     const newHashedPassword = crypto.pbkdf2Sync(newPassword, salt, 1000, 64, 'sha512').toString('hex');
     requiredUser.salt = salt;
     requiredUser.hashedPassword = newHashedPassword;
-    const token = getSignedToken(requiredUser.id);
+    const token = generateSignedToken(requiredUser.id);
 
     await requiredUser.save();
     const newUser: LoggedInUser = {
-        id: requiredUser.id,
-        name: requiredUser.name,
-        email: requiredUser.email,
+        id: requiredUser['id'],
+        name: requiredUser['name'],
+        email: requiredUser['email'],
+        department: requiredUser['department'],
+        institute: requiredUser['institute'],
+        contactNumber: requiredUser['contactNumber'],
+        linkedIn: requiredUser['linkedIn'],
+        about: requiredUser['about'],
         token
     }
     res.status(200).json({

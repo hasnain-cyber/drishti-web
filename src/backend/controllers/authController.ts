@@ -5,7 +5,7 @@ import jsonwebtoken from 'jsonwebtoken';
 import { LoggedInUser } from "@/frontend/hooks/useAuth";
 import { checkTokenValidity } from "../middlewares";
 
-export const getSignedToken = (id: string) => {
+export const generateSignedToken = (id: string) => {
     return jsonwebtoken.sign({ id }, process.env.JWT_SECRET as string);
 }
 
@@ -39,7 +39,7 @@ export async function loginUser(req: NextApiRequest, res: NextApiResponse) {
         res.status(400).json({ message: 'Password is incorrect.' });
         return;
     }
-    const token = getSignedToken(user.id);
+    const token = generateSignedToken(user.id);
 
     const clientSideData: LoggedInUser = {
         id: user['id'],
@@ -112,7 +112,7 @@ export async function registerUser(req: NextApiRequest, res: NextApiResponse) {
         about: user['about'],
         contactNumber: user['contactNumber'],
         linkedIn: user['linkedIn'],
-     token:   getSignedToken(user.id)
+        token: generateSignedToken(user.id)
     }
 
     await user.save();
