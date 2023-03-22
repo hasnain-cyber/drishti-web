@@ -1,4 +1,5 @@
 import useAuth from "@/frontend/hooks/useAuth";
+import useCoursesByUser from "@/frontend/hooks/useCoursesByUser";
 import useUserById from "@/frontend/hooks/useUserById";
 import { useRouter } from "next/router";
 import { Card } from "react-bootstrap";
@@ -33,7 +34,7 @@ const index = () => {
                         </div>
                         <div className={`${styles.profile__department}`}>
                             {/* <h2>{user && user['department']}</h2> */}
-                            <h2>Department of Computer Science and Engineering</h2>
+                            <h2>{user?.department}</h2>
                         </div>
                         <div className={`${styles.social__links}`}>
                             <div className={`${styles.social__link}`}>
@@ -41,7 +42,7 @@ const index = () => {
                                     <i className="fa-solid fa-location-dot"></i>
                                 </div>
                                 <div className={`${styles.social__link__name}`}>
-                                    <h3>Indian Institute of Technology, Indore</h3>
+                                    <h3>{user?.institute}</h3>
                                 </div>
                             </div>
                             <div className={`${styles.social__link}`}>
@@ -49,8 +50,7 @@ const index = () => {
                                     <i className="fa-solid fa-envelope"></i>
                                 </div>
                                 <div className={`${styles.social__link__name}`}>
-                                    {/* <h3>{user && user['email']}</h3> */}
-                                    <h3>anubhav.singh@iiti.ac.in</h3>
+                                    <h3>{user?.email}</h3>
                                 </div>
                             </div>
                             <div className={`${styles.social__link}`}>
@@ -58,7 +58,7 @@ const index = () => {
                                     <i className="fa-brands fa-linkedin"></i>
                                 </div>
                                 <div className={`${styles.social__link__name}`}>
-                                    <h3>Anubhav Singh Bassi</h3>
+                                    <h3>{user?.linkedIn.name}</h3>
                                 </div>
                             </div>
                         </div>
@@ -73,7 +73,7 @@ const index = () => {
                                 <i className="fa-solid fa-phone"></i>
                             </div>
                             <div className={`${styles.left__element__name}`}>
-                                <h3>+91 9876543210</h3>
+                                <h3>{user?.contactNumber}</h3>
                             </div>
                         </div>
                         <div className={`${styles.left__element}`}>
@@ -81,19 +81,7 @@ const index = () => {
                                 <i className="fa-solid fa-envelope"></i>
                             </div>
                             <div className={`${styles.left__element__name}`}>
-                                {/* <h3>{user && user['email']}</h3> */}
-                                <h3>anubhav.singh@iiti.ac.in</h3>
-                            </div>
-                        </div>
-                        <div className={`${styles.left__element}`}>
-                            <div className={`${styles.domain}`}>
-                                <h3>Artificial Inteligence</h3>
-                            </div>
-                            <div className={`${styles.domain}`}>
-                                <h3>Computer Vision</h3>
-                            </div>
-                            <div className={`${styles.domain}`}>
-                                <h3>Web Development</h3>
+                                <h3>{user?.email}</h3>
                             </div>
                         </div>
                     </div>
@@ -103,28 +91,35 @@ const index = () => {
                         <div className={`${styles.right__element}`}>
                             <h1>About Me</h1>
                             <p>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis quam voluptatibus, assumenda numquam cumque optio quisquam unde ab iusto nulla quae inventore, consequuntur, fugiat quasi beatae rerum quaerat suscipit praesentium quo illo earum debitis non. Veniam labore provident dicta quaerat dolorum veritatis culpa fugiat quos hic? Vero nesciunt alias voluptatum recusandae voluptates officiis impedit consectetur omnis facilis est? Id, reiciendis recusandae! Iure, fuga dolor?
+                                {user?.about}
                             </p>
                         </div>
-
-                        <div className={`${styles.right__element}`}>
-                            <h1>Courses</h1>
-                            {/* Render 6 Course Cards */}
-                            {
-                                [1, 2, 3, 4, 5, 6].map((element) => {
-                                    return (
-                                        <CourseCard />
-                                    );
-                                })
-                            }
-                        </div>
                     </div>
-
+                    <CoursesSection userId={user && user.id ? user.id : ''} />
                 </div>
             </div>
         </div>
     );
 };
+
+const CoursesSection = (props: { userId: string }) => {
+    // get courses by the user from all courses
+    const courses = useCoursesByUser(props.userId);
+
+    return (
+        <div className={`${styles.right__element}`}>
+            <h1>Courses</h1>
+            {/* Render 6 Course Cards */}
+            {
+                courses.map((course, index) => {
+                    return (
+                        <CourseCard key={index} />
+                    )
+                })
+            }
+        </div>
+    )
+}
 
 const CourseCard = () => {
     const router = useRouter();

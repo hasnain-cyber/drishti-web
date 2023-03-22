@@ -8,7 +8,7 @@ export interface CourseType {
     ownerId: string,
 }
 
-const useCourses = () => {
+export default function useCourses() {
     const { data, status } = useQuery<CourseType[], Error>('courses', async () => {
         const courses = await coursesHandler.getAllCourses();
         return courses;
@@ -16,5 +16,3 @@ const useCourses = () => {
 
     return { courses: data, coursesStatus: status };
 }
-
-export default useCourses;

@@ -1,13 +1,9 @@
 import usersHandler from '@/frontend/apiHandlers/usersHandler';
 import { useQuery } from 'react-query';
-
-export interface UserType {
-    id: string,
-    name: string,
-    email: string,
-    department: string,
-    about: [],
+import { LoggedInUser } from './useAuth';
+export interface UserType extends Omit<LoggedInUser, 'token'> {
 }
+
 
 export default function () {
     const { data, status } = useQuery<UserType[], Error>('users', async () => {
