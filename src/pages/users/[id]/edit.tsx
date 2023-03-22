@@ -1,3 +1,4 @@
+import React from "react";
 import useAuth from "@/frontend/hooks/useAuth";
 import { useRouter } from "next/router";
 import { MouseEventHandler, useState } from "react";
@@ -69,6 +70,38 @@ const edit = () => {
 }
 
 const PofileTab = () => {
+    const { userData } = useAuth();
+
+    const [email, setEmail] = useState("");
+    const [name, setName] = useState("");
+    const [department, setDepartment] = useState("");
+    const [institute, setInstitute] = useState("");
+    const [contactNumber, setContactNumber] = useState("");
+    const [linkedIn, setLinkedIn] = useState({
+        name: '',
+        url: ''
+    });
+
+    React.useEffect(() => {
+        if (userData) {
+            setEmail(userData.email);
+            setName(userData.name);
+            setDepartment(userData.department);
+            setInstitute(userData.institute);
+            setContactNumber(userData.contactNumber);
+            setLinkedIn({
+                name: userData.linkedIn.name,
+                url: userData.linkedIn.url
+            });
+        }
+    }, [userData]);
+
+    const handleSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        
+        
+    }
+
     return (
         <div className={`${styles.edit__main__container}`} id="profile_tab">
             <h1>Profile</h1>
@@ -81,15 +114,15 @@ const PofileTab = () => {
                 </div>
             </div>
             <div className={`${styles.container__form}`}>
-                <Form>
+                <Form onSubmit={handleSubmitForm}>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label>Email Address</Form.Label>
-                        <Form.Control type="email" placeholder="anubhav.singh@iiti.ac.in" disabled className={`${styles.text__input}`} />
+                        <Form.Control type="email" disabled className={`${styles.text__input}`} value={email} onChange={event => setEmail(event.target.value)} />
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formBasicName">
                         <Form.Label>Name</Form.Label>
-                        <Form.Control type="text" placeholder="Anubhav Singh" className={`${styles.text__input}`} />
+                        <Form.Control type="text" value={name} onChange={event => setName(event.target.value)} className={`${styles.text__input}`} />
                         <Form.Text className="text-muted m-1">
                             Please Include Your Full Name along with the Title (Dr./Proff.)
                         </Form.Text>
@@ -98,19 +131,19 @@ const PofileTab = () => {
                     {/* Department form */}
                     <Form.Group className="mb-3" controlId="formBasicDepartment">
                         <Form.Label>Department</Form.Label>
-                        <Form.Control type="text" placeholder="Department of Computer Science and Engineering" className={`${styles.text__input}`} />
+                        <Form.Control type="text" value={department} onChange={event => setDepartment(event.target.value)} className={`${styles.text__input}`} />
                     </Form.Group>
 
                     {/* Institute Form */}
                     <Form.Group className="mb-3" controlId="formBasicInstitute">
                         <Form.Label>Institute</Form.Label>
-                        <Form.Control type="text" placeholder="Indian Institute of Technology Indore" className={`${styles.text__input}`} />
+                        <Form.Control type="text" value={institute} onChange={event => setInstitute(event.target.value)} className={`${styles.text__input}`} />
                     </Form.Group>
 
                     {/* Contact Number */}
                     <Form.Group className="mb-3" controlId="formBasicContact">
                         <Form.Label>Contact Number</Form.Label>
-                        <Form.Control type="text" placeholder="+91 9234567890" className={`${styles.text__input}`} />
+                        <Form.Control type="text" value={contactNumber} onChange={event => setContactNumber(event.target.value)} className={`${styles.text__input}`} />
                     </Form.Group>
 
                     {/* Linked In Form */}
@@ -118,9 +151,19 @@ const PofileTab = () => {
                         <Form.Label>LinkedIn</Form.Label>
                         <div className={`${styles.input__group}`}>
                             <h3>Text to Display:</h3>
-                            <Form.Control type="text" placeholder="Anubhav Singh Bassi" className={`${styles.text__input}`} />
+                            <Form.Control type="text" value={linkedIn.name} onChange={event => setLinkedIn((value) => {
+                                return {
+                                    ...value,
+                                    name: event.target.value
+                                }
+                            })} className={`${styles.text__input}`} />
                             <h3>URL:</h3>
-                            <Form.Control type="text" placeholder="https://www.linkedin.com/in/anubhav-singh-bassi-0b1b3b1b3/" className={`${styles.text__input}`} />
+                            <Form.Control type="text" value={linkedIn.url} onChange={event => setLinkedIn((value) => {
+                                return {
+                                    ...value,
+                                    url: event.target.value
+                                }
+                            })} className={`${styles.text__input}`} />
                         </div>
                     </Form.Group>
 

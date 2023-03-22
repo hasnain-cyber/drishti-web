@@ -27,7 +27,6 @@ export default function () {
         return null;
     });
 
-
     const loginMutation = useMutation(async (credentials: {
         email: string,
         password: string
@@ -63,11 +62,8 @@ export default function () {
         },
     });
 
-    console.log("🚀 ~ file: useAuth.tsx:68 ~ userData.data:", userData.data);
-
     return {
         userData: (userData && userData.data) || null,
-        userLoggedIn: userData && userData.data,
         login: loginMutation.mutateAsync,
         logout: logoutMutation.mutateAsync,
         updateUser: updateUserMutation.mutateAsync,
