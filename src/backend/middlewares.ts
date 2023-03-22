@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken';
 import { NextApiRequest, NextApiResponse } from 'next';
+import professorModel from './models/userModels/professorModel';
 
-export const checkTokenValidity = (req: NextApiRequest, res: NextApiResponse, next: Function) => {
+export const checkTokenValidity = async (req: NextApiRequest, res: NextApiResponse, next: Function) => {
     if (!req.headers.authorization) {
         return res.status(401).json({
             message: 'Unauthorized request!'
@@ -15,14 +16,28 @@ export const checkTokenValidity = (req: NextApiRequest, res: NextApiResponse, ne
         });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+    const decoded: any = jwt.verify(token, process.env.JWT_SECRET as string);
     if (!decoded) {
         return res.status(401).json({
             message: 'Unauthorized request!'
         });
     }
 
-    next(decoded);
+    const userId = decoded['id'];
+    if (!userId) {
+        return res.status(401).json({
+            message: 'Unauthorized request!'
+        });
+    }
+    
+    const users = await professorModel.query().where('id').eq(userId).exec();
+    if (users.length === 0) {
+        return res.status(401).json({
+            message: 'Unauthorized request!'
+        });
+    }
+
+    next(users[0]);
 }
 
 export const checkOwner = (req: NextApiRequest, res: NextApiResponse, next: Function) => {

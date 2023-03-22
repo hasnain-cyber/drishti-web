@@ -11,11 +11,11 @@ const index = () => {
     // user is the user whose profile is being viewed
     const user = useUserById(userId as string);
     // userData is the logged in user
-    const { userData, isLoggedIn: userLoggedIn } = useAuth();
+    const { userData } = useAuth();
 
     return (
         <div className={`${styles.profile__body}`}>
-            {userLoggedIn && userData?.id === user?.id && (
+            {userData && user && userData['id'] === user['id'] && (
                 <div className={`${styles.edit__button} d-flex align-items-center`} onClick={() => router.push(`/users/${userId}/edit`)}>
                     <i className="fa-solid fa-edit"></i>
                     Edit Profile

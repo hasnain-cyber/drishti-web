@@ -1,5 +1,6 @@
 import authHandler from '@/frontend/apiHandlers/authHandler';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
+import usersHandler from '../apiHandlers/usersHandler';
 
 export interface LinkedInType {
     name: string;
@@ -51,7 +52,7 @@ export default function () {
     });
 
     const updateUserMutation = useMutation(async (user: LoggedInUser) => {
-        const response = await authHandler.updateProfile(user.token, user.name, user.email, user.department, user.institute, user.contactNumber, user.linkedIn, user.about);
+        const response = await usersHandler.updateProfile(user.token, user.name, user.email, user.department, user.institute, user.contactNumber, user.linkedIn, user.about);
         localStorage.setItem('user', JSON.stringify(response.user));
         return response.user;
     }, {

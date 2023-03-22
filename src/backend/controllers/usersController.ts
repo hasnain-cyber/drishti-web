@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import professorModel from '../models/userModels/professorModel';
+import professorModel, { DBProfessorType } from '../models/userModels/professorModel';
 import crypto from "crypto";
 import { generateSignedToken } from "./authController";
 import { LoggedInUser } from "@/frontend/hooks/useAuth";
+import { checkTokenValidity } from "../middlewares";
 
 export async function getAllUsers(req: NextApiRequest, res: NextApiResponse) {
     const users = await professorModel.scan().exec();
@@ -10,58 +11,60 @@ export async function getAllUsers(req: NextApiRequest, res: NextApiResponse) {
 }
 
 export async function updateUser(req: NextApiRequest, res: NextApiResponse) {
-    const { id, name, email, department, institute, contactNumber, linkedIn, about } = req.body;
+    checkTokenValidity(req, res, async (user: DBProfessorType) => {
+        const { name, email, department, institute, contactNumber, linkedIn, about } = req.body;
 
-    if (!id) {
-        res.status(400).json({ message: 'Id is required' });
-        return;
-    }
-
-    const existingUser = await professorModel.query().where('id').eq(id).exec();
-    if (existingUser.length > 0) {
-        const requiredUser = existingUser[0];
-        if (name) {
-            requiredUser.name = name;
-        }
-        if (email) {
-            requiredUser.email = email;
-        }
-        if (department) {
-            requiredUser.department = department;
-        }
-        if (institute) {
-            requiredUser.institute = institute;
-        }
-        if (contactNumber) {
-            requiredUser.contactNumber = contactNumber;
-        }
-        if (linkedIn) {
-            requiredUser.linkedIn = linkedIn;
-        }
-        if (about) {
-            requiredUser.about = about;
+        if (!user.id) {
+            res.status(400).json({ message: 'Id is required' });
+            return;
         }
 
-        await requiredUser.save();
-        const clientSideUser: LoggedInUser = {
-            id: requiredUser.id,
-            name: requiredUser.name,
-            email: requiredUser.email,
-            department: requiredUser.department,
-            institute: requiredUser.institute,
-            contactNumber: requiredUser.contactNumber,
-            linkedIn: requiredUser.linkedIn,
-            about: requiredUser.about,
-            token: generateSignedToken(requiredUser.id)
-        }
+        const existingUser = await professorModel.query().where('id').eq(user.id).exec();
+        if (existingUser.length > 0) {
+            const requiredUser = existingUser[0];
+            if (name) {
+                requiredUser.name = name;
+            }
+            if (email) {
+                requiredUser.email = email;
+            }
+            if (department) {
+                requiredUser.department = department;
+            }
+            if (institute) {
+                requiredUser.institute = institute;
+            }
+            if (contactNumber) {
+                requiredUser.contactNumber = contactNumber;
+            }
+            if (linkedIn) {
+                requiredUser.linkedIn = linkedIn;
+            }
+            if (about) {
+                requiredUser.about = about;
+            }
 
-        res.status(200).json({
-            user: clientSideUser
-        });
-    } else {
-        res.status(404).json({ message: 'User does not exist.' });
-        return;
-    }
+            await requiredUser.save();
+            const clientSideUser: LoggedInUser = {
+                id: requiredUser.id,
+                name: requiredUser.name,
+                email: requiredUser.email,
+                department: requiredUser.department,
+                institute: requiredUser.institute,
+                contactNumber: requiredUser.contactNumber,
+                linkedIn: requiredUser.linkedIn,
+                about: requiredUser.about,
+                token: generateSignedToken(requiredUser.id)
+            }
+
+            res.status(200).json({
+                user: clientSideUser
+            });
+        } else {
+            res.status(404).json({ message: 'User does not exist.' });
+            return;
+        }
+    });
 }
 
 export async function updatePassword(req: NextApiRequest, res: NextApiResponse) {
