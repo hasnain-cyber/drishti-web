@@ -6,6 +6,14 @@ export interface LoggedInUser {
     name: string,
     email: string,
     token: string,
+    department: string,
+    institute: string,
+    about: string,
+    contactNumber: string;
+    linkedIn: {
+        name: string;
+        url: string;
+    }
 }
 
 export default function () {
@@ -54,8 +62,8 @@ export default function () {
             queryClient.invalidateQueries('user');
         },
     });
-    
-    console.log("🚀 ~ file: useAuth.tsx:68 ~ userData.data:", userData.data)
+
+    console.log("🚀 ~ file: useAuth.tsx:68 ~ userData.data:", userData.data);
 
     return {
         userData: (userData && userData.data) || null,
@@ -65,4 +73,4 @@ export default function () {
         updateUser: updateUserMutation.mutateAsync,
     };
 };
-    
+

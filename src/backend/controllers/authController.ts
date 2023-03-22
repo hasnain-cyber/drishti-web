@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import crypto from "crypto";
-import professorModel from '../models/userModels/professorModel';
+import professorModel, { DBProfessorType } from '../models/userModels/professorModel';
 import jsonwebtoken from 'jsonwebtoken';
 import { LoggedInUser } from "@/frontend/hooks/useAuth";
 import { checkTokenValidity } from "../middlewares";
@@ -41,13 +41,19 @@ export async function loginUser(req: NextApiRequest, res: NextApiResponse) {
     }
     const token = getSignedToken(user.id);
 
+    const clientSideData: LoggedInUser = {
+        id: user['id'],
+        name: user['name'],
+        email: user['email'],
+        department: user['department'],
+        institute: user['institute'],
+        about: user['about'],
+        contactNumber: user['contactNumber'],
+        linkedIn: user['linkedIn'],
+        token
+    }
     res.status(200).json({
-        user: {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            token
-        }
+        user: clientSideData
     });
 }
 
@@ -80,26 +86,38 @@ export async function registerUser(req: NextApiRequest, res: NextApiResponse) {
     const salt = crypto.randomBytes(16).toString('hex');
     const hashedPassword = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
 
-    const user = new professorModel({
+    const data: DBProfessorType = {
         id: crypto.randomUUID(),
         name,
         email,
         hashedPassword,
         salt,
-        verified: false
-    });
+        department: "<Placeholder Department>",
+        institute: "<Placeholder Institute>",
+        about: "<Placeholder About>",
+        contactNumber: "<Placeholder Contact Number>",
+        linkedIn: {
+            name: "<Placeholder LinkedIn Name>",
+            url: "<Placeholder LinkedIn URL>"
+        }
+    }
+    const user = new professorModel(data);
 
-    const clientSideUser: LoggedInUser = {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        token: getSignedToken(user.id)
+    const clientSideData: LoggedInUser = {
+        id: user['id'],
+        name: user['name'],
+        email: user['email'],
+        department: user['department'],
+        institute: user['institute'],
+        about: user['about'],
+        contactNumber: user['contactNumber'],
+        linkedIn: user['linkedIn'],
+     token:   getSignedToken(user.id)
     }
 
     await user.save();
     res.status(201).json({
-        user: clientSideUser
+        user: clientSideData
     });
 }
 

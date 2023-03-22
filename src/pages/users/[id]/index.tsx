@@ -29,7 +29,7 @@ const index = () => {
                     <div className={`${styles.profile__details}`}>
                         <div className={`${styles.profile__name}`}>
                             {/* <h1>{user && user['name']}</h1> */}
-                            <h1>Dr. Anubhav Singh Bassi</h1>
+                            <h1>{user?.name}</h1>
                         </div>
                         <div className={`${styles.profile__department}`}>
                             {/* <h2>{user && user['department']}</h2> */}
