@@ -50,7 +50,9 @@ const index = () => {
                                     <i className="fa-solid fa-envelope"></i>
                                 </div>
                                 <div className={`${styles.social__link__name}`}>
-                                    <h3>{user?.email}</h3>
+                                    <a href={`mailto: ${user?.email}`} target="_blank" rel="norefferer" className="text-decoration-none">
+                                        <h3>{user?.email}</h3>
+                                    </a>
                                 </div>
                             </div>
                             <div className={`${styles.social__link}`}>
@@ -58,7 +60,9 @@ const index = () => {
                                     <i className="fa-brands fa-linkedin"></i>
                                 </div>
                                 <div className={`${styles.social__link__name}`}>
-                                    <h3>{user?.linkedIn.name}</h3>
+                                    <a href={user?.linkedIn.url} target="_blank" rel="norefferer" className="text-decoration-none">
+                                        <h3>{user?.linkedIn.name}</h3>
+                                    </a>
                                 </div>
                             </div>
                         </div>
