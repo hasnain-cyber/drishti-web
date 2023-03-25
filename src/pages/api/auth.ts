@@ -9,9 +9,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         case 'POST':
             authController.registerUser(req, res);
             break;
-        case 'PUT':
-            authController.updateUser(req, res);
-            break;
         case 'DELETE':
             authController.deleteUser(req, res);
             break;

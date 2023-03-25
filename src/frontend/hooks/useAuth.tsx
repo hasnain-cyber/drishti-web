@@ -1,25 +1,34 @@
 import authHandler from '@/frontend/apiHandlers/authHandler';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
+import usersHandler from '../apiHandlers/usersHandler';
+
+export interface LinkedInType {
+    name: string;
+    url: string;
+}
 
 export interface LoggedInUser {
     id: string,
     name: string,
     email: string,
-    role: string,
     token: string,
+    department: string,
+    institute: string,
+    about: string,
+    contactNumber: string;
+    linkedIn: LinkedInType;
 }
 
 export default function () {
     const queryClient = useQueryClient();
 
-    const user = useQuery('user', () => {
+    const userData = useQuery('user', () => {
         const tempUser = localStorage.getItem('user');
         if (tempUser) {
             return JSON.parse(tempUser) as LoggedInUser;
         }
         return null;
     });
-
 
     const loginMutation = useMutation(async (credentials: {
         email: string,
@@ -42,12 +51,8 @@ export default function () {
         },
     });
 
-    const updateUserMutation = useMutation(async (user: {
-        id: string,
-        name: string,
-        email: string
-    }) => {
-        const response = await authHandler.updateUser(user.id, user.name, user.email);
+    const updateUserMutation = useMutation(async (user: LoggedInUser) => {
+        const response = await usersHandler.updateProfile(user.token, user.name, user.email, user.department, user.institute, user.contactNumber, user.linkedIn, user.about);
         localStorage.setItem('user', JSON.stringify(response.user));
         return response.user;
     }, {
@@ -57,9 +62,10 @@ export default function () {
     });
 
     return {
-        user: (user && user.data) || null,
+        userData: (userData && userData.data) || null,
         login: loginMutation.mutateAsync,
         logout: logoutMutation.mutateAsync,
-        updateUser: updateUserMutation.mutateAsync,
+        updateProfile: updateUserMutation.mutateAsync,
     };
 };
+

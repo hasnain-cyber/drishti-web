@@ -8,7 +8,7 @@ const edit = () => {
     const router = useRouter();
     const { id } = router.query;
 
-    return (    
+    return (
         <div>
             <h1>Users Edit</h1>
             {!user && <p>Not logged in!</p>}
@@ -19,7 +19,7 @@ const edit = () => {
 }
 
 const EditComponent = () => {
-    const { user, updateUser } = useAuth();
+    const { user, updateProfile: updateUser } = useAuth();
 
     const [name, setName] = useState<string>(user?.name || '');
     const [email, setEmail] = useState<string>(user?.email || '');

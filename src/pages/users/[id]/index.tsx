@@ -1,41 +1,26 @@
 import useAuth from "@/frontend/hooks/useAuth";
-import useUsers, { UserType } from "@/frontend/hooks/useUsers";
+import useCoursesByUser from "@/frontend/hooks/useCoursesByUser";
+import useUserById from "@/frontend/hooks/useUserById";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 import { Card } from "react-bootstrap";
 import styles from "../../../styles/profile.module.css"
 
 const index = () => {
     const router = useRouter();
     const { id: userId } = router.query;
-    const [user, setUser] = useState<UserType | null>(null);
-    const { users, usersStatus } = useUsers();
-    useEffect(() => {
-        if (users && userId) {
-            const requiredUser = users.find((element) => element.id === userId);
-            setUser(requiredUser || null);
-        }
-    }, [users, userId]);
-
-    const { user: loggedInUser } = useAuth();
+    // user is the user whose profile is being viewed
+    const user = useUserById(userId as string);
+    // userData is the logged in user
+    const { userData } = useAuth();
 
     return (
         <div className={`${styles.profile__body}`}>
-            {/* <h1>{user && user['name']}</h1>
-            {loggedInUser && loggedInUser['id'] === userId && <button>Edit</button>}
-            <button>Edit2</button> */}
-            {/* Starting with Profile Page */}
-
-            <div className={`${styles.edit__button} d-flex align-items-center`} onClick={() => router.push(`/users/${userId}/edit`)}>
-                <i className="fa-solid fa-edit"></i>
-                Edit Profile
-            </div>
-
-            {/* {loggedInUser && loggedInUser['id'] === userId &&
-                    <div className={`${styles.edit__button}`}>
-                        <i className="fa-solid fa-edit"></i>
-                    </div>
-                } */}
+            {userData && user && userData['id'] === user['id'] && (
+                <div className={`${styles.edit__button} d-flex align-items-center`} onClick={() => router.push(`/users/${userId}/edit`)}>
+                    <i className="fa-solid fa-edit"></i>
+                    Edit Profile
+                </div>
+            )}
             <div className={`${styles.profile__container}`}>
                 <img className={`${styles.cover__image}`} src="/assets/profile/cover.jpg" />
                 <div className={`${styles.main__container}`}>
@@ -45,11 +30,11 @@ const index = () => {
                     <div className={`${styles.profile__details}`}>
                         <div className={`${styles.profile__name}`}>
                             {/* <h1>{user && user['name']}</h1> */}
-                            <h1>Dr. Anubhav Singh Bassi</h1>
+                            <h1>{user?.name}</h1>
                         </div>
                         <div className={`${styles.profile__department}`}>
                             {/* <h2>{user && user['department']}</h2> */}
-                            <h2>Department of Computer Science and Engineering</h2>
+                            <h2>{user?.department}</h2>
                         </div>
                         <div className={`${styles.social__links}`}>
                             <div className={`${styles.social__link}`}>
@@ -57,7 +42,7 @@ const index = () => {
                                     <i className="fa-solid fa-location-dot"></i>
                                 </div>
                                 <div className={`${styles.social__link__name}`}>
-                                    <h3>Indian Institute of Technology, Indore</h3>
+                                    <h3>{user?.institute}</h3>
                                 </div>
                             </div>
                             <div className={`${styles.social__link}`}>
@@ -65,8 +50,7 @@ const index = () => {
                                     <i className="fa-solid fa-envelope"></i>
                                 </div>
                                 <div className={`${styles.social__link__name}`}>
-                                    {/* <h3>{user && user['email']}</h3> */}
-                                    <h3>anubhav.singh@iiti.ac.in</h3>
+                                    <h3>{user?.email}</h3>
                                 </div>
                             </div>
                             <div className={`${styles.social__link}`}>
@@ -74,7 +58,7 @@ const index = () => {
                                     <i className="fa-brands fa-linkedin"></i>
                                 </div>
                                 <div className={`${styles.social__link__name}`}>
-                                    <h3>Anubhav Singh Bassi</h3>
+                                    <h3>{user?.linkedIn.name}</h3>
                                 </div>
                             </div>
                         </div>
@@ -89,7 +73,7 @@ const index = () => {
                                 <i className="fa-solid fa-phone"></i>
                             </div>
                             <div className={`${styles.left__element__name}`}>
-                                <h3>+91 9876543210</h3>
+                                <h3>{user?.contactNumber}</h3>
                             </div>
                         </div>
                         <div className={`${styles.left__element}`}>
@@ -97,19 +81,7 @@ const index = () => {
                                 <i className="fa-solid fa-envelope"></i>
                             </div>
                             <div className={`${styles.left__element__name}`}>
-                                {/* <h3>{user && user['email']}</h3> */}
-                                <h3>anubhav.singh@iiti.ac.in</h3>
-                            </div>
-                        </div>
-                        <div className={`${styles.left__element}`}>
-                            <div className={`${styles.domain}`}>
-                                <h3>Artificial Inteligence</h3>
-                            </div>
-                            <div className={`${styles.domain}`}>
-                                <h3>Computer Vision</h3>
-                            </div>
-                            <div className={`${styles.domain}`}>
-                                <h3>Web Development</h3>
+                                <h3>{user?.email}</h3>
                             </div>
                         </div>
                     </div>
@@ -119,41 +91,37 @@ const index = () => {
                         <div className={`${styles.right__element}`}>
                             <h1>About Me</h1>
                             <p>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis quam voluptatibus, assumenda numquam cumque optio quisquam unde ab iusto nulla quae inventore, consequuntur, fugiat quasi beatae rerum quaerat suscipit praesentium quo illo earum debitis non. Veniam labore provident dicta quaerat dolorum veritatis culpa fugiat quos hic? Vero nesciunt alias voluptatum recusandae voluptates officiis impedit consectetur omnis facilis est? Id, reiciendis recusandae! Iure, fuga dolor?
+                                {user?.about}
                             </p>
                         </div>
-
-                        <div className={`${styles.right__element}`}>
-                            <h1>Courses</h1>
-                            {/* Render 6 Course Cards */}
-                            {
-                                [1, 2, 3, 4, 5, 6].map((element) => {
-                                    return (
-                                        <CourseCard />
-                                    );
-                                })
-                            }
-                        </div>
                     </div>
-
+                    <CoursesSection userId={user && user.id ? user.id : ''} />
                 </div>
             </div>
         </div>
     );
 };
 
+const CoursesSection = (props: { userId: string }) => {
+    // get courses by the user from all courses
+    const courses = useCoursesByUser(props.userId);
+
+    return (
+        <div className={`${styles.right__element}`}>
+            <h1>Courses</h1>
+            {/* Render 6 Course Cards */}
+            {
+                courses.map((course, index) => {
+                    return (
+                        <CourseCard key={index} />
+                    )
+                })
+            }
+        </div>
+    )
+}
+
 const CourseCard = () => {
-    // const { courses, coursesStatus } = useCourses();
-    // const [course, setCourse] = useState<CourseType | null>(null);
-    // useEffect(() => {
-    //     if (courses) {
-    //         const course = courses.find((element) => element.id === props.courseId);
-    //         // assign null again if course is not found.
-    //         setCourse(course || null);
-
-    //     }
-    // }, [courses]);
-
     const router = useRouter();
     return (
         <div>

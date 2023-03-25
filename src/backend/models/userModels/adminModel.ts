@@ -1,18 +1,9 @@
 import dynamoose from 'dynamoose';
 
-export enum EUserRole {
-    Admin = 1,
-    Professor = 2
-}
-
-const userModel = dynamoose.model('User', {
+export default dynamoose.model('Admin', {
     id: {
         type: String,
         hashKey: true,
-    },
-    name: {
-        type: String,
-        required: true,
     },
     email: {
         type: String,
@@ -25,11 +16,5 @@ const userModel = dynamoose.model('User', {
     salt: {
         type: String,
         required: true,
-    },
-    role: {
-        type: Number,
-        required: true,
     }
-});
-
-export default userModel;
+})
