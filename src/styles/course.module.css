@@ -1,0 +1,116 @@
+.profile__body {
+    background-color: #F6F6F6;
+    font-family: var(--font3);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+.edit__container {
+    height: 100%;
+    width: 100%;
+}
+
+.edit__sidebar {
+    background-color: var(--col1);
+    text-transform: uppercase;
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    padding-top: 120px;
+    top: 0;
+    left: 0;
+    z-index: 5;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+.edit__sidebar__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+    margin: 0;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    color: #fff;
+}
+
+.edit__sidebar__header i {
+    font-size: 1rem;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.edit__sidebar__header h3 {
+    font-size: 1rem;
+    color: #fff;
+    margin-bottom: 0;
+    letter-spacing: 2.5px;
+}
+
+.active_header {
+    background-color: var(--col2);
+    color: #000;
+}
+
+.active_header h3 {
+    color: #000;
+}
+
+.edit__sidebar__content ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.edit__sidebar__subtopics {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    background-color: #fff;
+}
+
+.edit__sidebar__subtopics i {
+    font-size: 1rem;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.edit__sidebar__subtopics h3 {
+    font-size: 1rem;
+    color: #fff;
+    margin-bottom: 0;
+    letter-spacing: 2.5px;
+}
+
+.active_subtopics {
+    color: var(--col1);
+    font-weight: bolder;
+}
+
+.active_subtopics h3 {
+    color: var(--col1);
+    font-weight: bolder;
+}
+
+.save__button {
+    width: 60%;
+    margin: 150px auto 0px auto;
+    background-color: var(--col3);
+    color: var(--col1);
+    border-radius: 1.5rem;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    z-index: 5;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.save__button i {
+    margin: 0;
+    margin-right: 10px;
+}
