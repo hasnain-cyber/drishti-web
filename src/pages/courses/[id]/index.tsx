@@ -5,17 +5,21 @@ import { useState } from "react";
 const index = () => {
     const router = useRouter();
     const { id } = router.query;
+    const [edit_toggle, setEdit_toggle] = useState(false);
 
     return (
         <div className={`${styles.profile__body}`}>
             {/* Frontend */}
+            <div className={`${styles.edit__hamburger}`} onClick={() => setEdit_toggle(!edit_toggle)}>
+                Modules<i aria-hidden className={edit_toggle ? "ms-2 mb-0 fas fa-arrow-left" : "ms-2 mb-0 fas fa-arrow-right"}></i>
+            </div>
             <div className={`${styles.edit__container}`}>
-
+                {/* Mobile Menu Hamburger */}
                 {/* Topics Section */}
-                <div className={`${styles.edit__sidebar}`}>
-                    <Accordian1 />
+                <div className={`${styles.edit__sidebar} ${edit_toggle ? styles.active__sidebar : ''}`}>
                     <Accordian />
-                    <Accordian1 />
+                    <Accordian />
+                    <Accordian />
                 </div>
 
                 {/* Make a main container to display the content of the selected tab */}
@@ -33,7 +37,7 @@ const Accordian = () => {
 
     return (
         <div>
-            <div className={`${styles.edit__sidebar__header} ${styles.active_header}`} onClick={toggle}>
+            <div className={`${styles.edit__sidebar__header} ${open ? styles.active_header : ''}`} onClick={toggle}>
                 <h3>Topic 1</h3>
                 {open ? <i aria-hidden className="fas fa-chevron-up"></i> : <i aria-hidden className="fas fa-chevron-down"></i>}
             </div>

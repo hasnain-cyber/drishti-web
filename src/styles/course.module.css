@@ -22,6 +22,7 @@
     left: 0;
     z-index: 5;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    overflow-y: auto;
 }
 
 .edit__sidebar__header {
@@ -113,4 +114,49 @@
 .save__button i {
     margin: 0;
     margin-right: 10px;
+}
+
+.edit__hamburger {
+    display: none!important;
+    position: fixed;
+    bottom: 20px;
+    left: 10px;
+    padding: 8px;
+    background-color: var(--col3);
+    z-index: 50;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: var(--col1);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.edit__hamburger i {
+    color: var(--col1);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.active__sidebar {
+    transform: translateX(0px);
+}
+
+/* Media Querry for mobile screen */
+@media screen and (max-width: 768px) {
+    .edit__hamburger {
+        display: block!important;
+    }
+
+    .edit__sidebar {
+        /* add left to right transistion animation */
+        transform: translateX(-100%);
+        transition: all 0.5s ease;
+    }
+
+    .active__sidebar {
+        transform: translateX(0px);
+    }
 }
