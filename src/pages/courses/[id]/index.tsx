@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import styles from "../../../styles/course.module.css";
 import { useState } from "react";
+import { Container } from "react-bootstrap";
 
 const index = () => {
     const router = useRouter();
@@ -24,7 +25,14 @@ const index = () => {
 
                 {/* Make a main container to display the content of the selected tab */}
                 <div className={`${styles.edit__main}`}>
-                    Main Page!
+                    <div className={`${styles.edit__main__container}`}>
+                        <h1>Subtopic 1: Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima, animi?</h1>
+                        <p>Module : Lorem ipsum dolor sit amet. / Topic 1 : Lorem ipsum dolor sit amet consectetur adipisicing.</p>
+                        {/* Video Embed */}
+                        <Container className={`${styles.video__container}`}>
+                            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/9bZkp7q19f0" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+                        </Container>
+                    </div>
                 </div>
             </div>
         </div>
