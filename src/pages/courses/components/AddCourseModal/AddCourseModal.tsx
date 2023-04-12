@@ -26,7 +26,7 @@ function AddCourseModal() {
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formDescription">
                             <Form.Label>Module Description</Form.Label>
-                            <Form.Control type="text" placeholder="Enter Module Description" />
+                            <Form.Control type="textarea" placeholder="Enter Module Description" />
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formTags">
                             {/* ToDo: Implement https://codepen.io/chaseottofy/pen/PodQNKO  */}

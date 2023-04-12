@@ -65,22 +65,21 @@ const Introduction = () => {
                 {/* ToDo: Add router to goto Professor Page here */}
                 <p className="ms-2">Dr. Rishi Ranjan</p>
 
-                {/* Video Embed */}
-                {/* <Container className={`${styles.video__container}`}>
-                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/9bZkp7q19f0" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
-                </Container> */}
-
-                {/* <Container className={`${styles.text__container}`}> */}
-
                 <h3>About the Module</h3>
                 Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde molestias inventore neque similique voluptates magni numquam ad, aliquid alias vel placeat, quos at voluptas praesentium in impedit exercitationem possimus consequatur quod voluptatibus laborum cupiditate! Modi magnam enim fugiat voluptas autem cupiditate atque! Veniam quis repellat commodi eveniet molestias suscipit numquam explicabo illo necessitatibus maxime, autem iusto harum fugit assumenda doloremque consequatur, asperiores quibusdam. Explicabo a delectus alias repellendus odio ab dolore repellat quisquam nam, fuga corrupti dolorum quas fugiat velit perferendis distinctio maxime fugit nemo soluta minima ducimus maiores eaque reiciendis. Dolorem corrupti pariatur reiciendis veniam mollitia officiis incidunt ab earum nisi nobis perferendis, quia exercitationem rem commodi eum unde praesentium porro quaerat animi optio libero deserunt quis officia! Voluptates minus ab at culpa quae sequi est ratione, exercitationem nam tempora quo inventore assumenda vel corrupti temporibus repudiandae asperiores nostrum rem quia fugiat. Ipsum qui facere eveniet eligendi, sit nihil quasi! Eveniet dolore beatae doloribus consectetur amet, distinctio sit reiciendis. Labore ex a voluptate laudantium recusandae, earum at hic aliquam totam quos, laborum, culpa dolorum illum quaerat suscipit corrupti! Unde distinctio ea est, sapiente numquam aspernatur earum dolores totam! Sint nam distinctio minus odit asperiores facilis deleniti architecto reiciendis? Voluptate!
-                {/* </Container> */}
 
-                {/* Calculate from Backend: */}
                 <p className="my-3">
                     Total Topics: <span className="text-dark me-3">5</span>
                     Total Subtopics: <span className="text-dark">10</span>
                 </p>
+
+                <div className={`${styles.tags__container}`}>
+                    <p className="mb-0 text-dark">Module Tags: </p>
+                    <div className={`${styles.main__tags} me-2`}>#Lorem</div>
+                    <div className={`${styles.main__tags} me-2`}>#Ipsum</div>
+                    <div className={`${styles.main__tags} me-2`}>#Dolor</div>
+                    <div className={`${styles.main__tags} me-2`}>#Sit</div>
+                </div>
 
                 <Button variant="primary" className={`${styles.link__button}`}>
                     Start Module <i aria-hidden className="ms-2 fas fa-arrow-right"></i>
