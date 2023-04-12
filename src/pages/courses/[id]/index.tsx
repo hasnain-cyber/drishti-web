@@ -62,6 +62,7 @@ const Introduction = () => {
         <div className={`${styles.edit__main__container}`}>
             <Container>
                 <h2>Module: Lorem ipsum dolor sit amet.</h2>
+                {/* ToDo: Add router to goto Professor Page here */}
                 <p className="ms-2">Dr. Rishi Ranjan</p>
 
                 {/* Video Embed */}

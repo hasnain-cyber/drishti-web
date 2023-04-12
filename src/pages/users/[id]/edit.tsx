@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { MouseEventHandler, useState } from "react";
 import { Form, Button, Container, Card } from "react-bootstrap";
 import styles from "../../../styles/editprofile.module.css";
+import AddCourseModal from "@/pages/courses/components/AddCourseModal/AddCourseModal";
 
 enum Tabs {
     Profile = "profile_tab",
@@ -240,9 +241,7 @@ const CoursesTab = () => {
         <div className={`${styles.edit__main__container} ${styles.active_tab}`} id="courses_tab">
             <h1>Courses</h1>
             <p>You can add, edit or delete your Courses from here!</p>
-            <div className={`${styles.profile__picture}`}>
-                <Button className={`${styles.remove__dp}`}> <i className="fa-solid fa-plus"></i> Add Course</Button>
-            </div>
+            <AddCourseModal/>
             <Container className={`${styles.edit__courses__container}`}>
                 <h2>Your Courses: </h2>
                 {[1, 2, 4, 5, 6].map((__, index) => {
