@@ -1,119 +1,89 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import professorModel, { DBProfessorType } from '../models/userModels/professorModel';
+import professorModel from '../models/userModels/professorModel';
 import crypto from "crypto";
-import { generateSignedToken } from "./authController";
-import { LoggedInUser } from "@/frontend/hooks/useAuth";
+import { generateClientSideUser, generateHashedPassword } from "./authController";
 import { checkTokenValidity } from "../middlewares";
-
-export async function getAllUsers(req: NextApiRequest, res: NextApiResponse) {
-    const users = await professorModel.scan().exec();
-    res.status(200).json(users);
-}
-
-export async function updateUser(req: NextApiRequest, res: NextApiResponse) {
-    checkTokenValidity(req, res, async (user: DBProfessorType) => {
-        const { name, email, department, institute, contactNumber, linkedIn, about } = req.body;
-
-        if (!user.id) {
-            res.status(400).json({ message: 'Id is required' });
-            return;
-        }
-
-        const existingUser = await professorModel.query().where('id').eq(user.id).exec();
-        if (existingUser.length > 0) {
-            const requiredUser = existingUser[0];
-            if (name) {
-                requiredUser.name = name;
-            }
-            if (email) {
-                requiredUser.email = email;
-            }
-            if (department) {
-                requiredUser.department = department;
-            }
-            if (institute) {
-                requiredUser.institute = institute;
-            }
-            if (contactNumber) {
-                requiredUser.contactNumber = contactNumber;
-            }
-            if (linkedIn) {
-                requiredUser.linkedIn = linkedIn;
-            }
-            if (about) {
-                requiredUser.about = about;
-            }
-
-            await requiredUser.save();
-            const clientSideUser: LoggedInUser = {
-                id: requiredUser.id,
-                name: requiredUser.name,
-                email: requiredUser.email,
-                department: requiredUser.department,
-                institute: requiredUser.institute,
-                contactNumber: requiredUser.contactNumber,
-                linkedIn: requiredUser.linkedIn,
-                about: requiredUser.about,
-                token: generateSignedToken(requiredUser.id)
-            }
-
-            res.status(200).json({
-                user: clientSideUser
-            });
-        } else {
-            res.status(404).json({ message: 'User does not exist.' });
-            return;
-        }
-    });
-}
-
-export async function updatePassword(req: NextApiRequest, res: NextApiResponse) {
-    const { password, newPassword } = req.body;
-    const id = req.query.id as string;
-
-    if (!id) {
-        res.status(400).json({ message: 'Id is required' });
-        return;
-    }
-
-    const existingUser = await professorModel.query().where('id').eq(id).exec();
-    if (existingUser.length === 0) {
-        res.status(404).json({ message: 'User does not exist.' });
-        return;
-    }
-
-    const requiredUser = existingUser[0];
-    const hashedPassword = crypto.pbkdf2Sync(password, requiredUser['salt'], 1000, 64, 'sha512').toString('hex');
-    if (hashedPassword !== requiredUser['hashedPassword']) {
-        res.status(400).json({ message: 'Password is incorrect.' });
-        return;
-    }
-
-    const salt = crypto.randomBytes(16).toString('hex');
-    const newHashedPassword = crypto.pbkdf2Sync(newPassword, salt, 1000, 64, 'sha512').toString('hex');
-    requiredUser.salt = salt;
-    requiredUser.hashedPassword = newHashedPassword;
-    const token = generateSignedToken(requiredUser.id);
-
-    await requiredUser.save();
-    const newUser: LoggedInUser = {
-        id: requiredUser['id'],
-        name: requiredUser['name'],
-        email: requiredUser['email'],
-        department: requiredUser['department'],
-        institute: requiredUser['institute'],
-        contactNumber: requiredUser['contactNumber'],
-        linkedIn: requiredUser['linkedIn'],
-        about: requiredUser['about'],
-        token
-    }
-    res.status(200).json({
-        user: newUser
-    });
-}
+import httpStatusCodes from "http-status-codes";
 
 export default {
-    getAllUsers,
-    updateUser,
-    updatePassword
+    getAllUsers: async (req: NextApiRequest, res: NextApiResponse) => {
+        const users = await professorModel.scan().exec();
+        return res.status(httpStatusCodes.OK).json({
+            users: users
+        });
+    },
+    updateUser: (req: NextApiRequest, res: NextApiResponse) => {
+        checkTokenValidity(req, res, async (decoded: any) => {
+            const { name, email, department, institute, contactNumber, linkedIn, about } = req.body;
+            try {
+                const users = await professorModel.query('id').eq(decoded.id).exec();
+                if (users.length === 0) {
+                    return res.status(httpStatusCodes.NOT_FOUND).end();
+                }
+
+                const user = users[0];
+
+                if (name) {
+                    user.name = name;
+                }
+                if (email) {
+                    user.email = email;
+                }
+                if (department) {
+                    user.department = department;
+                }
+                if (institute) {
+                    user.institute = institute;
+                }
+                if (contactNumber) {
+                    user.contactNumber = contactNumber;
+                }
+                if (linkedIn) {
+                    user.linkedIn = linkedIn;
+                }
+                if (about) {
+                    user.about = about;
+                }
+                const newUser = generateClientSideUser(user.id, user.name, user.email, user.department, user.institute, user.about, user.contactNumber, user.linkedIn);
+                await user.save();
+                res.status(httpStatusCodes.OK).json({
+                    user: newUser
+                });
+            }
+            catch (err) {
+                console.log("🚀 ~ file: usersController.ts:34 ~ updateUser: ~ err:", err)
+                return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).end();
+            }
+        });
+    },
+    updatePassword: async (req: NextApiRequest, res: NextApiResponse) => {
+        checkTokenValidity(req, res, async (decoded: any) => {
+            const { password, newPassword } = req.body;
+            const id = decoded['id'];
+
+            const users = await professorModel.query().where('id').eq(id).exec();
+            if (users.length === 0) {
+                return res.status(httpStatusCodes.NOT_FOUND).end();
+            }
+
+            const user = users[0];
+            const hashedPassword = generateHashedPassword(password, user.salt);
+            if (hashedPassword !== user['hashedPassword']) {
+                res.status(httpStatusCodes.UNAUTHORIZED).end();
+                return;
+            }
+
+            const salt = crypto.randomBytes(16).toString('hex');
+            const newHashedPassword = generateHashedPassword(newPassword, salt);
+
+            user.salt = salt;
+            user.hashedPassword = newHashedPassword;
+
+            const newUser = generateClientSideUser(user.id, user.name, user.email, user.department, user.institute, user.about, user.contactNumber, user.linkedIn);
+            await user.save();
+            res.status(httpStatusCodes.OK).json({
+                user: newUser
+            });
+        });
+    }
 };
