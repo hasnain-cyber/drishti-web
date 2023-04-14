@@ -5,9 +5,7 @@ import httpStatusCodes from 'http-status-codes';
 
 export const checkTokenValidity = async (req: NextApiRequest, res: NextApiResponse, next: Function) => {
     if (!req.headers.authorization || req.headers.authorization.split(' ')[1]) {
-        return res.status(401).json({
-            message: 'Unauthorized request!'
-        });
+        return res.status(httpStatusCodes.UNAUTHORIZED).end();
     }
 
     const token = req.headers.authorization.split(' ')[1];

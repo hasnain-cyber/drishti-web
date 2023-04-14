@@ -6,10 +6,10 @@ import authHandler from '@/frontend/apiHandlers/authHandler';
 import { useRouter } from 'next/router';
 
 export default function signup() {
-    const [name, setName] = useState<string>('')
-    const [email, setEmail] = useState<string>('')
-    const [password, setPassword] = useState<string>('')
-    const [confirmPassword, setConfirmPassword] = useState<string>('')
+    const [name, setName] = useState('')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
 
     const router = useRouter();
 
@@ -17,8 +17,7 @@ export default function signup() {
         event.preventDefault();
 
         if (password !== confirmPassword) {
-            alert("Passwords don't match!")
-            return;
+            return alert("Passwords do not match.");
         }
 
         const response = await authHandler.signup(name, email, password);
@@ -62,15 +61,6 @@ export default function signup() {
                             </div>
                         </div>
                     </Form>
-                    {/* Or use google login */}
-                    {/* <div className={styles.login_card_footer}>
-                        <div className={styles.login_card_footer_text}>
-                            <span>Or use your account</span>
-                        </div>
-                        <div className={styles.login_card_footer_social}>
-                            <i className="fab fa-google" />
-                        </div>
-                    </div> */}
                 </Col>
             </Container>
         </div>

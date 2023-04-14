@@ -19,53 +19,89 @@ export interface LoggedInUser {
     linkedIn: LinkedInType;
 }
 
+const getUserFromLocalStorage = () => {
+    const tempUser = localStorage.getItem('user');
+    if (!tempUser) {
+        return null;
+    }
+    return JSON.parse(tempUser) as LoggedInUser;
+};
+
 export default function () {
     const queryClient = useQueryClient();
 
-    const userData = useQuery('user', () => {
-        const tempUser = localStorage.getItem('user');
-        if (tempUser) {
-            return JSON.parse(tempUser) as LoggedInUser;
+    const userData = useQuery('user', getUserFromLocalStorage);
+
+    const registerMutation = useMutation(async (credentials: {
+        name: string,
+        email: string,
+        password: string
+    }) => {
+        try {
+            const response = await fetch(`api/auth/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: credentials.name,
+                    email: credentials.email,
+                    password: credentials.password
+                }),
+            });
+            const responseJSON = await response.json();
+            return responseJSON;
+        } catch (error) {
+            console.log("🚀 ~ file: useAuth.tsx:55 ~ error:", error)
         }
-        return null;
+    }, {
+        onSuccess: (data) => {
+            console.log("🚀 ~ file: useAuth.tsx:59 ~ data:", data)
+            queryClient.setQueryData('user', data.user);
+        }
     });
 
     const loginMutation = useMutation(async (credentials: {
         email: string,
         password: string
     }) => {
-        const response = await authHandler.login(credentials.email, credentials.password);
-        localStorage.setItem('user', JSON.stringify(response.user));
-        return response.user;
+        try {
+            const response = await fetch(`api/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: credentials.email,
+                    password: credentials.password
+                }),
+            });
+            const responseJSON = await response.json();
+            return responseJSON;
+        } catch (error) {
+            console.log("🚀 ~ file: useAuth.tsx:52 ~ error:", error)
+        }
     }, {
-        onSuccess: () => {
-            queryClient.invalidateQueries('user');
+        onSuccess(data) {
+            console.log("🚀 ~ file: useAuth.tsx:59 ~ onSuccess ~ data:", data)
+            queryClient.setQueryData('user', data.user);
         },
     });
 
     const logoutMutation = useMutation(async () => {
         localStorage.removeItem('user');
+        return null;
     }, {
-        onSuccess: () => {
-            queryClient.invalidateQueries('user');
-        },
-    });
-
-    const updateUserMutation = useMutation(async (user: LoggedInUser) => {
-        const response = await usersHandler.updateProfile(user.token, user.name, user.email, user.department, user.institute, user.contactNumber, user.linkedIn, user.about);
-        localStorage.setItem('user', JSON.stringify(response.user));
-        return response.user;
-    }, {
-        onSuccess: () => {
-            queryClient.invalidateQueries('user');
-        },
+        onSuccess: (data) => {
+            queryClient.setQueryData('user', data);
+        }
     });
 
     return {
         userData: (userData && userData.data) || null,
         login: loginMutation.mutateAsync,
-        logout: logoutMutation.mutateAsync,
-        updateProfile: updateUserMutation.mutateAsync,
+        register: registerMutation.mutateAsync,
+        logout: logoutMutation.mutateAsync
     };
 };
 
