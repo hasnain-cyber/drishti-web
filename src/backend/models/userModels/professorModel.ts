@@ -12,6 +12,9 @@ export default dynamoose.model('Professor', {
     email: {
         type: String,
         required: true,
+        index: {
+            name: 'email-index'
+        },
     },
     hashedPassword: {
         type: String,

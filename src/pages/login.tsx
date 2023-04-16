@@ -15,8 +15,15 @@ export default function login() {
     const handleSubmitForm: FormEventHandler<HTMLFormElement> = async (event) => {
         event.preventDefault();
 
-        const user = await login({ email, password });
-        router.push(`/users/${user.id}`);
+        try {
+            const response = await login({ email, password });
+            console.log("🚀 ~ file: login.tsx:20 ~ consthandleSubmitForm:FormEventHandler<HTMLFormElement>= ~ response:", response);
+            if (response) {
+                router.push('/dashboard');
+            }
+        } catch (error) {
+            console.log("🚀 ~ file: login.tsx:48 ~ handleSubmitForm ~ error", error);
+        }
     }
 
     return (

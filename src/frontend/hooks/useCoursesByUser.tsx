@@ -1,8 +1,8 @@
 import React from "react";
-import useGlobalCourses, { CourseType } from "./useGlobalCourses";
+import useGlobalCourses from "./useGlobalCourses";
 
 export default function useCoursesByUser(userId: string) {
-    const [courses, setCourses] = React.useState<CourseType[]>([]);
+    const [courses, setCourses] = React.useState<any[]>([]);
     const globalCourses = useGlobalCourses();
     React.useEffect(() => {
         if (globalCourses.courses) {
