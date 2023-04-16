@@ -1,5 +1,5 @@
 import coursesHandler from '@/frontend/apiHandlers/coursesHandler';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 
 export default function useCourses() {
     const { data, status } = useQuery<any[], Error>('courses', async () => {
@@ -10,5 +10,13 @@ export default function useCourses() {
         return response['courses'];
     });
 
-    return { courses: data, coursesStatus: status };
+    const addCourseMutation = useMutation(async (course: any) => {
+
+    });
+
+    return {
+        courses: data,
+        coursesStatus: status,
+        add: addCourseMutation.mutateAsync
+    };
 }
