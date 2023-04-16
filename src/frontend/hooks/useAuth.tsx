@@ -166,6 +166,10 @@ export default function () {
                     about: data.about
                 }),
             });
+            if (response.status === httpStatusCodes.UNAUTHORIZED) {
+                return alert('Please login to continue.');
+            }
+
             const responseJSON = await response.json();
             console.log("🚀 ~ file: useAuth.tsx:149 ~ responseJSON:", responseJSON)
             return responseJSON;

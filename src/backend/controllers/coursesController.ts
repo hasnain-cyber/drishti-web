@@ -90,7 +90,7 @@ export async function deleteCourse(req: NextApiRequest, res: NextApiResponse) {
 
 export default {
     getAllCourses,
-    createCourse,
+    addCourse: createCourse,
     getCourseById,
     updateCourse,
     deleteCourse,
