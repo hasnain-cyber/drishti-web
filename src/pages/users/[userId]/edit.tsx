@@ -17,7 +17,7 @@ enum Tabs {
 
 const edit = () => {
 	const router = useRouter();
-	const { id } = router.query;
+	const { userId } = router.query;
 
 	const [tab, setTab] = useState(Tabs.Profile);
 
@@ -56,7 +56,7 @@ const edit = () => {
 					</div>
 
 					{/* Go Back */}
-					<div className={`d-flex justify-content-center ${styles.edit__sidebar__item} ${styles.save__button}`} onClick={() => router.push(`/users/${id}`)}>
+					<div className={`d-flex justify-content-center ${styles.edit__sidebar__item} ${styles.save__button}`} onClick={() => router.push(`/users/${userId}`)}>
 						<i className="fa-solid fa-arrow-left"></i>
 						Go Back
 					</div>
@@ -252,8 +252,8 @@ const CoursesTab = () => {
 			<h1>Courses</h1>
 			<p>You can add, edit or delete your Courses from here!</p>
 			<AddCourseModal />
-			<Container className={`${styles.edit__courses__container}`}>
-				<h2>Your Courses: </h2>
+			<h2>Your Courses: </h2>
+			<Container className={`${styles.edit__courses__container} d-flex flex-column`}>
 				{courses && courses.map((course, index) => {
 					return <CourseCard key={index} id={course['id']} />
 				})}
@@ -269,6 +269,8 @@ const CourseCard = (props: {
 	const { course } = useCourseById(props.id);
 	const { deleteCourse } = useGlobalCourses();
 
+	const router = useRouter();
+
 	const handleClickDeleteCourse: React.MouseEventHandler<HTMLDivElement> = async (event) => {
 		if (!window.confirm('Do you really want to delete this course')) {
 			return;
@@ -283,6 +285,10 @@ const CourseCard = (props: {
 		}
 	}
 
+	const handleClickEditCourse: React.MouseEventHandler<HTMLDivElement> = async (event) => {
+		router.push(`/courses/${props.id}/edit`);
+	}
+
 	if (!course) {
 		return null;
 	}
@@ -292,29 +298,21 @@ const CourseCard = (props: {
 				<Card.Body>
 					<div className={`d-flex ${styles.card__text}`}>
 						<div className={styles.avatar}><i className="fa-solid fa-book-open"></i></div>
-						<div className={styles.result__content}>
-							<div className={styles.result__title} role="button">{course['title']}</div>
-							<div className={styles.result__subtitle}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis veritatis iste odit ad deserunt eaque a provident nisi sapiente recusandae.</div>
-							<div className="d-flex justify-content-between flex-wrap">
-								<div>
-									<div className={styles.topics}>
-										<div className={styles.topic}>Tag 1</div>
-										<div className={styles.topic}>Tag 2</div>
-										<div className={styles.topic}>Tag 3</div>
-									</div>
-									<div className={styles.result__instructor}>Uploaded By: <span>Dr. Anubhav Singh Bassi</span></div>
+						<div className={`d-flex justify-content-between w-100`}>
+							<div>
+								<div className={styles.result__title} role="button">{course['name']}</div>
+								<div className={styles.result__subtitle}>{course['description']}</div>
+							</div>
+							<div>
+								{/* Edit Course */}
+								<div className={styles.course__button} onClick={handleClickEditCourse}>
+									<i className="fa-solid fa-edit"></i>
+									Edit Course
 								</div>
-								<div>
-									{/* Edit Course */}
-									<div className={styles.course__button}>
-										<i className="fa-solid fa-edit"></i>
-										Edit Course
-									</div>
-									{/* Delete Course */}
-									<div className={styles.course__button} onClick={handleClickDeleteCourse}>
-										<i className="fa-solid fa-trash"></i>
-										Delete Course
-									</div>
+								{/* Delete Course */}
+								<div className={styles.course__button} onClick={handleClickDeleteCourse}>
+									<i className="fa-solid fa-trash"></i>
+									Delete Course
 								</div>
 							</div>
 						</div>

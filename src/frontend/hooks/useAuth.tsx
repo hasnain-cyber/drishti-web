@@ -95,6 +95,7 @@ export default function () {
                     password: credentials.password
                 }),
             });
+            console.log("🚀 ~ file: useAuth.tsx:112 ~ responseJSON:", response)
             if (response.status === httpStatusCodes.BAD_REQUEST) {
                 return alert('All fields are required.');
             }
@@ -109,8 +110,10 @@ export default function () {
             }
             if (response.status === httpStatusCodes.OK) {
                 const responseJSON = await response.json();
+                console.log("🚀 ~ file: useAuth.tsx:112 ~ responseJSON:", responseJSON)
                 return responseJSON;
             }
+            console.log("🚀 ~ file: useAuth.tsx:112 ~ responseJSON:", response)
             return null;
         } catch (error) {
             console.log("🚀 ~ file: useAuth.tsx:52 ~ error:", error)

@@ -7,7 +7,7 @@ export default function () {
 
     const { data, status } = useQuery<any[], Error>('courses', async () => {
         try {
-            const response = await fetch(`${window.location.origin}/api/courses`, {
+            const response = await fetch(`/api/courses`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

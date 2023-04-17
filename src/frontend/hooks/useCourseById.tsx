@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import useGlobalCourses from "./useGlobalCourses";
 
-export const useCourseById = (id: string) => {
+export const useCourseById = (id: string | undefined) => {
     const { courses } = useGlobalCourses();
     const [course, setCourse] = useState(null);
     useEffect(() => {

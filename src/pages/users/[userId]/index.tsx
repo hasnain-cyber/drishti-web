@@ -10,6 +10,7 @@ const index = () => {
     const { id: userId } = router.query;
     // user is the user whose profile is being viewed
     const user = useUserById(userId as string);
+    console.log("🚀 ~ file: index.tsx:13 ~ index ~ user:", user)
     // userData is the logged in user
     const { userData } = useAuth();
 
