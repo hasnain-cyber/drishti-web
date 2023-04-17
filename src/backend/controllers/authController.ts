@@ -49,22 +49,27 @@ export default {
         const hashedPassword = generateHashedPassword(password, salt);
 
         const data = generateDBUser(
-            crypto.randomBytes(16).toString('hex'),
+            crypto.randomUUID(),
             name,
             email,
-            hashedPassword,
             salt,
+            hashedPassword,
             '',
             '',
             '',
             '',
             { name: '', url: '' }
         )
-        const clientSideData = generateClientSideUser(data.id, data.name, data.email, data.department, data.institute, data.about, data.contactNumber, data.linkedIn);
-        const user = await professorModel.create(data);
-        res.status(httpStatusCodes.CREATED).json({
-            user: clientSideData
-        });
+        try {
+            const user = await professorModel.create(data);
+            const clientSideData = generateClientSideUser(data.id, data.name, data.email, data.department, data.institute, data.about, data.contactNumber, data.linkedIn);
+            res.status(httpStatusCodes.CREATED).json({
+                user: clientSideData
+            });
+        } catch (error) {
+            console.log("🚀 ~ file: authController.ts:70 ~ registerUser: ~ error:", error)
+            res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).end();
+        }
     },
     loginUser: async (req: NextApiRequest, res: NextApiResponse) => {
         const { email, password } = req.body;
@@ -79,9 +84,11 @@ export default {
                 return res.status(httpStatusCodes.NOT_FOUND).end();
             } else {
                 const user = query[0];
-                console.log("🚀 ~ file: authController.ts:82 ~ loginUser: ~ user:", user)
-                const hashedPassword = generateHashedPassword(password, user.salt);
+                const hashedPassword = generateHashedPassword(password, user['salt']);
+                console.log("🚀 ~ file: authController.ts:88 ~ loginUser: ~ password, user['salt']:", password, user['salt']);
+                console.log("🚀 ~ file: authController.ts:90 ~ loginUser: ~ crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex'):", crypto.pbkdf2Sync(password, user['salt'], 1000, 64, 'sha512').toString('hex'))
                 if (hashedPassword !== user['hashedPassword']) {
+                    console.log("🚀 ~ file: authController.ts:90 ~ loginUser: ~ hashedPassword:", hashedPassword, 'user[\'hashedPassword\']', user['hashedPassword']);
                     return res.status(httpStatusCodes.UNAUTHORIZED).end();
                 }
                 const clientSideData = generateClientSideUser(user.id, user.name, user.email, user.department, user.institute, user.about, user.contactNumber, user.linkedIn);

@@ -19,7 +19,7 @@ export default function login() {
             const response = await login({ email, password });
             console.log("🚀 ~ file: login.tsx:20 ~ consthandleSubmitForm:FormEventHandler<HTMLFormElement>= ~ response:", response);
             if (response) {
-                router.push('/dashboard');
+                router.push(`/users/${response.user.id}`);
             }
         } catch (error) {
             console.log("🚀 ~ file: login.tsx:48 ~ handleSubmitForm ~ error", error);

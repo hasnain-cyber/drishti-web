@@ -25,13 +25,3 @@ export const checkTokenValidity = async (req: NextApiRequest, res: NextApiRespon
 
     next(users[0]);
 }
-
-export const checkOwner = (req: NextApiRequest, res: NextApiResponse, next: Function) => {
-    checkTokenValidity(req, res, (decoded: any) => {
-        if (decoded['id'] === req.body.ownerId) {
-            next();
-        } else {
-            return res.status(httpStatusCodes.UNAUTHORIZED).end();
-        }
-    });
-}

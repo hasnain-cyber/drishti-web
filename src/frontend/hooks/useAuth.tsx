@@ -190,8 +190,6 @@ export default function () {
         }
     });
 
-    console.log('user.data', userData.data);
-
     return {
         userData: (userData && userData.data) || null,
         login: loginMutation.mutateAsync,

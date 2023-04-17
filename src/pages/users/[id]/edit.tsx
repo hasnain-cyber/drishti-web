@@ -6,6 +6,8 @@ import { Form, Button, Container, Card } from "react-bootstrap";
 import styles from "../../../styles/editprofile.module.css";
 import AddCourseModal from "@/frontend/components/AddCourseModal/AddCourseModal";
 import useCoursesByUser from "@/frontend/hooks/useCoursesByUser";
+import { useCourseById } from "@/frontend/hooks/useCourseById";
+import useGlobalCourses from "@/frontend/hooks/useGlobalCourses";
 
 enum Tabs {
 	Profile = "profile_tab",
@@ -252,10 +254,8 @@ const CoursesTab = () => {
 			<AddCourseModal />
 			<Container className={`${styles.edit__courses__container}`}>
 				<h2>Your Courses: </h2>
-				{[1, 2, 4, 5, 6].map((__, index) => {
-					return (
-						<CourseCard key={index} id={'randomId'} />
-					)
+				{courses && courses.map((course, index) => {
+					return <CourseCard key={index} id={course['id']} />
 				})}
 			</Container>
 		</div>
@@ -266,15 +266,34 @@ const CoursesTab = () => {
 const CourseCard = (props: {
 	id: string
 }) => {
-	const router = useRouter();
+	const { course } = useCourseById(props.id);
+	const { deleteCourse } = useGlobalCourses();
+
+	const handleClickDeleteCourse: React.MouseEventHandler<HTMLDivElement> = async (event) => {
+		if (!window.confirm('Do you really want to delete this course')) {
+			return;
+		}
+
+		try {
+			const response = await deleteCourse(props.id);
+			console.log("🚀 ~ file: edit.tsx:281 ~ response:", response);
+			alert('Course deleted successfully.');
+		} catch (error) {
+			console.log("🚀 ~ file: edit.tsx:283 ~ error:", error)
+		}
+	}
+
+	if (!course) {
+		return null;
+	}
 	return (
 		<div>
-			<Card className={`${styles.coursecard}`} onClick={() => router.push(`courses/falanademkana`)}>
+			<Card className={`${styles.coursecard}`}>
 				<Card.Body>
 					<div className={`d-flex ${styles.card__text}`}>
 						<div className={styles.avatar}><i className="fa-solid fa-book-open"></i></div>
 						<div className={styles.result__content}>
-							<div className={styles.result__title} role="button">Random Course Name</div>
+							<div className={styles.result__title} role="button">{course['title']}</div>
 							<div className={styles.result__subtitle}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis veritatis iste odit ad deserunt eaque a provident nisi sapiente recusandae.</div>
 							<div className="d-flex justify-content-between flex-wrap">
 								<div>
@@ -292,7 +311,7 @@ const CourseCard = (props: {
 										Edit Course
 									</div>
 									{/* Delete Course */}
-									<div className={styles.course__button}>
+									<div className={styles.course__button} onClick={handleClickDeleteCourse}>
 										<i className="fa-solid fa-trash"></i>
 										Delete Course
 									</div>
