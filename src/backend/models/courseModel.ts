@@ -1,11 +1,7 @@
 import dynamoose from 'dynamoose';
 
 const subTopicSchema = new dynamoose.Schema({
-    id: {
-        type: String,
-        required: true,
-    },
-    title: {
+    name: {
         type: String,
         required: true,
     },
@@ -16,10 +12,6 @@ const subTopicSchema = new dynamoose.Schema({
 });
 
 const topicSchema = new dynamoose.Schema({
-    id: {
-        type: String,
-        required: true,
-    },
     name: {
         type: String,
         required: true,

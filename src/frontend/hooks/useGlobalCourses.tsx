@@ -100,7 +100,6 @@ export default function () {
             }
             if (response.status === httpStatusCodes.OK) {
                 const responseJSON = await response.json();
-                console.log("🚀 ~ file: useGlobalCourses.tsx:103 ~ deleteCourseMutation ~ responseJSON:", responseJSON)
                 return responseJSON;
             }
 

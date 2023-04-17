@@ -8,7 +8,6 @@ export default function useCoursesByUser(userId: string) {
 
     React.useEffect(() => {
         if (courses) {
-            console.log("🚀 ~ file: useCoursesByUser.tsx:9 ~ React.useEffect ~ courses:", courses, userId);
             const filteredCourses = courses.filter(course => course.ownerId === userId);
             setUserCourses(filteredCourses);
         }
