@@ -2,12 +2,12 @@ import React from 'react'
 import { Card } from 'react-bootstrap'
 import styles from './NewsTicker.module.css'
 
-export default function NewsTicker() {
+export default function NewsTicker(props: { title: string }) {
     return (
         <div>
             <Card>
                 <Card.Body>
-                    <Card.Title className={styles.heading}>NEWS</Card.Title>
+                    <Card.Title className={styles.heading}>{props.title}</Card.Title>
                     <Card.Text className={styles.scrollWrap}>
                         <div className={styles.scrollContent}>
                             <div className={styles.listItem}>

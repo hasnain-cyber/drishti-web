@@ -63,7 +63,11 @@ const edit = () => {
                         {<AddNewTopicModal addTopic={addTopic} />}
                     </div>
                     <div className={`${styles.edit__sidebar__header} py-0`}>
-                        <Button variant="light" className="w-100 text-center justify-content-center">
+                        <Button variant="light" className="w-100 text-center justify-content-center" onClick={(event) => {
+                            if (course) {
+                                router.push(`/users/${(course as any).ownerId}`);
+                            }
+                        }}>
                             <i aria-hidden className="ms-0 mb-0 me-2 fas fa-arrow-left"></i>
                             Save and Exit
                         </Button>

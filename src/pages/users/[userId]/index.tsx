@@ -4,6 +4,8 @@ import useUserById from "@/frontend/hooks/useUserById";
 import { useRouter } from "next/router";
 import { Card } from "react-bootstrap";
 import styles from "../../../styles/profile.module.css"
+import { useEffect, useState } from "react";
+import useGlobalCourses from "@/frontend/hooks/useGlobalCourses";
 
 const index = () => {
     const router = useRouter();
@@ -12,6 +14,16 @@ const index = () => {
     const user = useUserById(userId as string);
     // userData is the logged in user
     const { userData } = useAuth();
+
+    // get all courses by user
+    const { courses } = useGlobalCourses();
+    const [coursesByUser, setCoursesByUser] = useState<any>([]);
+    useEffect(() => {
+        if (courses && userId) {
+            const requiredCourses = courses.filter((element) => element.ownerId === userId);
+            setCoursesByUser(requiredCourses);
+        }
+    }, [userId, courses])
 
     return (
         <div className={`${styles.profile__body}`}>
@@ -117,7 +129,9 @@ const CoursesSection = (props: { userId: string }) => {
             {
                 courses.map((course, index) => {
                     return (
-                        <CourseCard key={index} />
+                        <CourseCard key={index} data={{
+                            name: course.name
+                        }} />
                     )
                 })
             }
@@ -125,7 +139,7 @@ const CoursesSection = (props: { userId: string }) => {
     )
 }
 
-const CourseCard = () => {
+const CourseCard = (props: { data: any }) => {
     const router = useRouter();
     return (
         <div>
@@ -135,14 +149,14 @@ const CourseCard = () => {
                         <div className={`d-flex ${styles.card__text}`}>
                             <div className={styles.avatar}><i className="fa-solid fa-book-open"></i></div>
                             <div className={styles.result__content}>
-                                <div className={styles.result__title}>Random Course Name</div>
+                                <div className={styles.result__title}>{props.data.name}</div>
                                 <div className={styles.result__subtitle}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis veritatis iste odit ad deserunt eaque a provident nisi sapiente recusandae.</div>
                                 <div className={styles.topics}>
                                     <div className={styles.topic}>Tag 1</div>
                                     <div className={styles.topic}>Tag 2</div>
                                     <div className={styles.topic}>Tag 3</div>
                                 </div>
-                                <div className={styles.result__instructor}>Uploaded By: <span>Dr. Anubhav Singh Bassi</span></div>
+                                <div className={styles.result__instructor}>Uploaded By: <span>B.K. Lad</span></div>
                             </div>
                         </div>
                     </Card.Text>

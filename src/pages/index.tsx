@@ -10,10 +10,10 @@ const Index = () => {
       <Container className="my-5">
         <Row className="px-3">
           <Col sm={12} md={6} lg={6} className="my-3">
-            <NewsTicker />
+            <NewsTicker title={'New learning modules'} />
           </Col>
           <Col sm={12} md={6} lg={6} className="my-3">
-            <NewsTicker />
+            <NewsTicker title={'Popular learning modules'} />
           </Col>
 
         </Row>
