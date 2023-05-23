@@ -9,7 +9,7 @@ const NavbarComponent = () => {
     return (
         <Navbar bg="light" expand="lg" sticky='top'>
             <Container>
-                <Navbar.Brand as={NavLink} href="/" className={styles.navhome}>DRISHTI</Navbar.Brand>
+                <Navbar.Brand as={NavLink} href="/" className={styles.navhome}>iShiksha</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="d-flex align-items-center me-auto">

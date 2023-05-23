@@ -1,0 +1,66 @@
+.heading {
+    font-size: 1.5rem;
+    font-family: var(--font3);
+    letter-spacing: 0.1em;
+    color: var(--col1);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.scrollWrap {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    padding: 20px;
+    height: 200px;
+}
+.scrollWrap::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(0deg, #ffff 0%, rgba(0,0,0,0) 10%, rgba(0,0,0,0) 90%, #ffff 100%);
+}
+
+.scrollContent {
+    /* position: absolute; */
+    width: 100%;
+    height: 300%;
+    animation: slide 10s linear infinite;
+}
+
+.scrollContent:hover {
+    animation-play-state: paused;
+}
+
+.listItem {
+    margin-bottom: 20px;
+}
+
+.listItem a {
+    text-decoration: none;
+    font-family: var(--font2);
+    font-weight: 900;
+    animation: blinking infinite 1s linear;
+    cursor: pointer;
+}
+
+@keyframes blinking {
+    0% {
+        color: var(--col1);
+    }
+    100% {
+        color: #000000;
+    }
+}
+@keyframes slide {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-100%);
+    }
+  }

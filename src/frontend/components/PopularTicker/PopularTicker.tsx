@@ -1,13 +1,15 @@
 import React from 'react'
 import { Card } from 'react-bootstrap'
-import styles from './NewsTicker.module.css'
+import styles from './PopularTicker.module.css'
 
-export default function NewsTicker() {
+
+
+export default function PopularTicker() {
     return (
         <div>
             <Card>
                 <Card.Body>
-                    <Card.Title className={styles.heading}>NEWS</Card.Title>
+                    <Card.Title className={styles.heading}>Popular Learning Modules</Card.Title>
                     <Card.Text className={styles.scrollWrap}>
                         <div className={styles.scrollContent}>
                             <div className={styles.listItem}>

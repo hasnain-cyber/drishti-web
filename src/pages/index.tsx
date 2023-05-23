@@ -1,5 +1,7 @@
 import HeroComponent from "@/frontend/components/HeroComponent/HeroComponent";
-import NewsTicker from "@/frontend/components/NewsTicker/NewsTicker";
+import NewTicker from "@/frontend/components/NewTicker/NewTicker";
+import PopularTicker from "@/frontend/components/PopularTicker/PopularTicker";
+
 import { Col, Container, Row } from "react-bootstrap";
 
 const Index = () => {
@@ -10,10 +12,10 @@ const Index = () => {
       <Container className="my-5">
         <Row className="px-3">
           <Col sm={12} md={6} lg={6} className="my-3">
-            <NewsTicker />
+            <NewTicker />
           </Col>
           <Col sm={12} md={6} lg={6} className="my-3">
-            <NewsTicker />
+            <PopularTicker />
           </Col>
 
         </Row>

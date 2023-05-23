@@ -24,9 +24,9 @@ export default function login() {
             <div className={styles.overlay} />
             <Container className={`m-auto ${styles.container}`}>
                 <Col sm={12} md={6} lg={8} className={styles.title}>
-                    <h1>educate.</h1>
-                    <h1>enlighten.</h1>
-                    <h1>evolve.</h1>
+                    <h1>Connect</h1>
+                    <h1>Play</h1>
+                    <h1>Learn</h1>
                 </Col>
                 <Col sm={12} md={6} lg={8} className={styles.login_card}>
                     <Form onSubmit={handleSubmitForm}>
