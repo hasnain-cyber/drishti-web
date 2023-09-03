@@ -114,7 +114,6 @@ const ProfileTab = () => {
 				linkedIn,
 				about
 			});
-			console.log("🚀 ~ file: edit.tsx:115 ~ handleSubmitForm ~ response:", response)
 			if (response) {
 				alert("Profile Updated Successfully");
 			}
@@ -338,7 +337,7 @@ const CoursesTab = () => {
 const CourseCard = (props: {
 	id: string
 }) => {
-	const { course } = useCourseById(props.id);
+	const course = useCourseById(props.id);
 	const { deleteCourse } = useGlobalCourses();
 
 	const router = useRouter();

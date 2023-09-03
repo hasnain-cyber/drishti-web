@@ -31,7 +31,6 @@
     align-items: center;
     padding: 20px 30px;
     margin: 0;
-    cursor: pointer;
     transition: all 0.5s ease;
     color: #fff;
 }
@@ -40,6 +39,7 @@
     font-size: 1rem;
     margin-left: 20px;
     margin-right: 20px;
+    cursor: pointer;
 }
 
 .edit__sidebar__header h3 {
@@ -47,6 +47,7 @@
     color: #fff;
     margin-bottom: 0;
     letter-spacing: 2.5px;
+    cursor: pointer;
 }
 
 .active_header {

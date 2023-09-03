@@ -72,6 +72,14 @@ const edit = () => {
         setAddTopicIndex(null);
     }
 
+    const deleteTopic = (topicIndex: number) => {
+        if (window.confirm("Are you sure you want to delete this topic?")) {
+            const newTopicsArray = [...newTopics];
+            newTopicsArray.splice(topicIndex, 1);
+            setNewTopics(newTopicsArray);
+        }
+    }
+
     return (
         <div className={`${styles.profile__body}`}>
             {/* Frontend */}
@@ -94,7 +102,9 @@ const edit = () => {
                                 }}
                                 toggleEditSubtopicForm={(subTopicIndex: number) => {
                                     toggleEditSubtopicForm(index, subTopicIndex);
-                                }} />
+                                }}
+                                deleteTopic={deleteTopic}
+                            />
                         )
                     })}
                     <div className={`${styles.edit__sidebar__header}`}>
@@ -133,7 +143,8 @@ const Accordian = (props: {
     topic: any,
     topicIndex: number,
     toggleAddSubtopicForm: Function,
-    toggleEditSubtopicForm: Function
+    toggleEditSubtopicForm: Function,
+    deleteTopic: Function
 }) => {
     const [open, setOpen] = useState(false);
     const toggle = () => setOpen(!open);
@@ -151,9 +162,13 @@ const Accordian = (props: {
 
     return (
         <div>
-            <div className={`${styles.edit__sidebar__header} ${open ? styles.active_header : ''}`} onClick={toggle}>
-                <h3>{props.topic.name}</h3>
-                {open ? <i aria-hidden className="fas fa-chevron-up"></i> : <i aria-hidden className="fas fa-chevron-down"></i>}
+            <div className={`${styles.edit__sidebar__header} ${open ? styles.active_header : ''}`}>
+                <h3 className="mb-0" onClick={toggle}>{props.topic.name}</h3>
+                <div className="d-flex justify-content-center align-items-center">
+                    {/* Delete Trash */}
+                    <i aria-hidden className="fas fa-trash m-0" onClick={() => props.deleteTopic(props.topicIndex)}></i>
+                    <i aria-hidden className={open ? `fas fa-chevron-up` : `fas fa-chevron-down`} onClick={toggle}></i>
+                </div>
             </div>
             {open && (<div className={`${styles.edit__sidebar__content}`}>
                 <ul>

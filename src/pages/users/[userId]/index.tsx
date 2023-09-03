@@ -148,21 +148,19 @@ const CourseCard = (props: { data: any }) => {
         <div>
             <Card className={`${styles.coursecard}`} onClick={() => router.push(`courses/falanademkana`)} role={'button'}>
                 <Card.Body>
-                    <Card.Text>
-                        <div className={`d-flex ${styles.card__text}`}>
-                            <div className={styles.avatar}><i className="fa-solid fa-book-open"></i></div>
-                            <div className={styles.result__content}>
-                                <div className={styles.result__title}>{props.data.name}</div>
-                                <div className={styles.result__subtitle}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis veritatis iste odit ad deserunt eaque a provident nisi sapiente recusandae.</div>
-                                <div className={styles.topics}>
-                                    <div className={styles.topic}>Tag 1</div>
-                                    <div className={styles.topic}>Tag 2</div>
-                                    <div className={styles.topic}>Tag 3</div>
-                                </div>
-                                <div className={styles.result__instructor}>Uploaded By: <span>B.K. Lad</span></div>
+                    <div className={`d-flex ${styles.card__text}`}>
+                        <div className={styles.avatar}><i className="fa-solid fa-book-open"></i></div>
+                        <div className={styles.result__content}>
+                            <div className={styles.result__title}>{props.data.name}</div>
+                            <div className={styles.result__subtitle}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis veritatis iste odit ad deserunt eaque a provident nisi sapiente recusandae.</div>
+                            <div className={styles.topics}>
+                                <div className={styles.topic}>Tag 1</div>
+                                <div className={styles.topic}>Tag 2</div>
+                                <div className={styles.topic}>Tag 3</div>
                             </div>
+                            <div className={styles.result__instructor}>Uploaded By: <span>B.K. Lad</span></div>
                         </div>
-                    </Card.Text>
+                    </div>
                 </Card.Body>
             </Card>
         </div>
