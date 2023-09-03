@@ -241,7 +241,7 @@ const ProfileTab = () => {
 }
 
 const SecurityTab = () => {
-	const { changePassword } = useAuth(); // Assuming you only need changePassword from useAuth
+	const { changePassword } = useAuth();
 
 	const [currentPassword, setCurrentPassword] = useState("");
 	const [newPassword, setNewPassword] = useState("");

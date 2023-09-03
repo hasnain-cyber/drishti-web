@@ -31,6 +31,7 @@ const NavbarComponent = () => {
                             </>
                             :
                             <>
+                                <Nav.Link as={NavLink} href={`/users/${userData.id}`} className={styles.navhover}>My Profile</Nav.Link>
                                 <Button className={`mx-2 ${styles.loginbutton}`} onClick={handleClickLogout}>Logout</Button>
                             </>
                         }
