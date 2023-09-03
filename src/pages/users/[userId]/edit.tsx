@@ -308,24 +308,32 @@ const SecurityTab = () => {
 
 const CoursesTab = () => {
 	const { userData } = useAuth();
-	const courses = (userData && userData['id']) ? useCoursesByUser(userData['id']) : null;
-	console.log("🚀 ~ file: edit.tsx:247 ~ courses:", courses)
+	const courses = useCoursesByUser(userData ? userData.id : null);
 
 	return (
 		<div className={`${styles.edit__main__container} ${styles.active_tab}`} id="courses_tab">
 			<h1>Courses</h1>
-			<p>You can add, edit or delete your Courses from here!</p>
-			<AddCourseModal />
-			<h2>Your Courses: </h2>
-			<Container className={`${styles.edit__courses__container} d-flex flex-column`}>
-				{courses && courses.map((course, index) => {
-					return <CourseCard key={index} id={course['id']} />
-				})}
-			</Container>
+			<p>You can add, edit, or delete your courses from here!</p>
+			{userData ? (
+				<>
+					<AddCourseModal />
+					<h2>Your Courses:</h2>
+					{courses && courses.length > 0 ? (
+						<Container className={`${styles.edit__courses__container} d-flex flex-column`}>
+							{courses.map((course) => (
+								<CourseCard key={course.id} id={course.id} />
+							))}
+						</Container>
+					) : (
+						<p>No courses by user.</p>
+					)}
+				</>
+			) : (
+				<p>Please log in to view your courses.</p>
+			)}
 		</div>
-	)
-}
-
+	);
+};
 
 const CourseCard = (props: {
 	id: string

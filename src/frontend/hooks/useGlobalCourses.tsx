@@ -24,7 +24,7 @@ export default function () {
     const { userData } = useAuth();
 
     const addCourseMutation = useMutation(async (course: {
-        title: string,
+        name: string,
         description: string
     }) => {
         if (!userData) {
@@ -51,6 +51,7 @@ export default function () {
                 return alert('Something went wrong. Please try again later.');
             }
             if (response.status === httpStatusCodes.CREATED) {
+                alert('Course added successfully.')
                 const responseJSON = await response.json();
                 return responseJSON;
             }
@@ -61,9 +62,6 @@ export default function () {
         }
     }, {
         onSuccess: (data) => {
-            if (!data) {
-                queryClient.setQueryData('courses', []);
-            }
             queryClient.invalidateQueries('courses');
         }
     });

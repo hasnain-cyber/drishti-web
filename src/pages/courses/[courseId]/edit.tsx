@@ -5,39 +5,71 @@ import { Button, Container, Form, Modal } from "react-bootstrap";
 import { useCourseById } from "@/frontend/hooks/useCourseById";
 
 const edit = () => {
-    const router = useRouter();
-    const { courseId } = router.query;
-    const { course } = useCourseById(courseId as string | undefined);
-
-    // initaialize fields according to previous data
-    const [topics, setTopics] = useState<any[]>([]);
-    useEffect(() => {
-        if (course) {
-            setTopics(course['topics']);
-        }
-    }, [course])
-
     const [edit_toggle, setEdit_toggle] = useState(false);
+    // get courseId from url
+    const { query } = useRouter();
+    const course = useCourseById(query.courseId ? query.courseId as string : null);
+    const currentTopics = course ? course.topics : null;
+    const [newTopics, setNewTopics] = useState<any>(currentTopics);
 
-    const addTopic = (data: {
-        topic: {
-            name: string
+    useEffect(() => {
+        if (currentTopics) {
+            setNewTopics(currentTopics);
         }
-    }) => {
-        setTopics([...topics, {
-            name: data.topic.name,
+    }, [currentTopics]);
+
+    const addTopic = (name: string) => {
+        const newTopic = {
+            name,
             subTopics: []
-        }]);
-        console.log("🚀 ~ file: edit.tsx:29 ~ edit ~ [...topics, data.topic]:", [...topics, data.topic])
+        }
+        setNewTopics([...newTopics, newTopic]);
     }
 
-    const addSubtopic = (index: number) => {
-        const newTopics = [...topics];
-        newTopics[index].subTopics.push({
-            name: "New Subtopic"
-        });
-        setTopics(newTopics);
-        console.log("🚀 ~ file: edit.tsx:41 ~ addSubtopic ~ newTopics:", newTopics)
+    const [addTopicIndex, setAddTopicIndex] = useState<number | any>(null);
+    const toggleAddSubtopicForm = (topicIndex: number | null) => {
+        if (addTopicIndex === null) {
+            setAddTopicIndex(topicIndex);
+        } else {
+            setAddTopicIndex(null);
+        }
+    }
+    const addSubTopic = (topicIndex: number, name: string, description: string) => {
+        if (!name || name.length === 0 || !description || description.length === 0) {
+            return alert("Please fill all the fields");
+        }
+
+        const newSubTopic = {
+            name,
+            description
+        }
+
+        const newTopicsArray = [...newTopics];
+        newTopicsArray[topicIndex].subTopics.push(newSubTopic);
+        setNewTopics(newTopicsArray);
+        setAddTopicIndex(null);
+    }
+
+    const [editTopicIndex, setEditTopicIndex] = useState<number | any>(null);
+    const [editSubTopicIndex, setEditSubTopicIndex] = useState<number | any>(null);
+    const toggleEditSubtopicForm = (topicIndex: number | null, subTopicIndex: number | null) => {
+        setEditTopicIndex(topicIndex);
+        setEditSubTopicIndex(subTopicIndex);
+    }
+    const editSubTopic = (topicIndex: number, subTopicIndex: number, name: string, description: string) => {
+        if (!name || name.length === 0 || !description || description.length === 0) {
+            return alert("Please fill all the fields");
+        }
+
+        const newSubTopic = {
+            name,
+            description
+        }
+
+        const newTopicsArray = [...newTopics];
+        newTopicsArray[topicIndex].subTopics[subTopicIndex] = newSubTopic;
+        setNewTopics(newTopicsArray);
+        setAddTopicIndex(null);
     }
 
     return (
@@ -54,19 +86,23 @@ const edit = () => {
                         {/* crop to 20 words */}
                         <h3 className="fw-bold">Module Title</h3>
                     </div>
-                    {topics.map((topic: any, index) => {
+                    {newTopics && newTopics.map((topic: any, index: number) => {
                         return (
-                            <Accordian key={index} index={index} topic={topic} addSubTopic={addSubtopic} />
+                            <Accordian key={index} topicIndex={index} topic={topic}
+                                toggleAddSubtopicForm={(topicIndex: number) => {
+                                    toggleAddSubtopicForm(topicIndex);
+                                }}
+                                toggleEditSubtopicForm={(subTopicIndex: number) => {
+                                    toggleEditSubtopicForm(index, subTopicIndex);
+                                }} />
                         )
-                    })};
+                    })}
                     <div className={`${styles.edit__sidebar__header}`}>
                         {<AddNewTopicModal addTopic={addTopic} />}
                     </div>
                     <div className={`${styles.edit__sidebar__header} py-0`}>
                         <Button variant="light" className="w-100 text-center justify-content-center" onClick={(event) => {
-                            if (course) {
-                                router.push(`/users/${(course as any).ownerId}`);
-                            }
+
                         }}>
                             <i aria-hidden className="ms-0 mb-0 me-2 fas fa-arrow-left"></i>
                             Save and Exit
@@ -76,8 +112,17 @@ const edit = () => {
 
                 {/* Make a main container to display the content of the selected tab */}
                 <div className={`${styles.edit__main}`}>
-                    {/* <IntroductionForm /> */}
-                    <SubtopicForm />
+                    {addTopicIndex !== null || editSubTopicIndex !== null ?
+                        <SubtopicForm
+                            addTopicIndex={addTopicIndex} editTopicIndex={editTopicIndex}
+                            editSubTopicIndex={editSubTopicIndex}
+                            addSubTopic={addSubTopic} editSubTopic={editSubTopic}
+                            newTopics={newTopics}
+                        />
+                        :
+                        <>
+                        </>
+                    }
                 </div>
             </div>
         </div>
@@ -86,21 +131,28 @@ const edit = () => {
 
 const Accordian = (props: {
     topic: any,
-    index: number,
-    addSubTopic: Function
+    topicIndex: number,
+    toggleAddSubtopicForm: Function,
+    toggleEditSubtopicForm: Function
 }) => {
     const [open, setOpen] = useState(false);
     const toggle = () => setOpen(!open);
 
-    const [currentSubTopicIndex, setCurrentSubTopicIndex] = useState(0);
-    const handleClickSubTopic = (index: number) => {
-        setCurrentSubTopicIndex(index);
+    const [currentSubTopicIndex, setCurrentSubTopicIndex] = useState<number | null>(null);
+    const handleClickSubTopic = (subTopicIndex: number) => {
+        if (currentSubTopicIndex === subTopicIndex) {
+            setCurrentSubTopicIndex(null);
+            props.toggleEditSubtopicForm(null);
+        } else {
+            setCurrentSubTopicIndex(subTopicIndex);
+            props.toggleEditSubtopicForm(subTopicIndex);
+        }
     }
 
     return (
         <div>
             <div className={`${styles.edit__sidebar__header} ${open ? styles.active_header : ''}`} onClick={toggle}>
-                <h3>{props.topic['name']}</h3>
+                <h3>{props.topic.name}</h3>
                 {open ? <i aria-hidden className="fas fa-chevron-up"></i> : <i aria-hidden className="fas fa-chevron-down"></i>}
             </div>
             {open && (<div className={`${styles.edit__sidebar__content}`}>
@@ -120,7 +172,7 @@ const Accordian = (props: {
                     })}
                     <li className={`${styles.edit__sidebar__subtopics}`}>
                         <Button variant="primary" className="w-100 text-center justify-content-center" onClick={() => {
-                            props.addSubTopic(props.index);
+                            props.toggleAddSubtopicForm(props.topicIndex);
                         }}>
                             <i aria-hidden className="ms-0 mb-0 me-2 fas fa-plus"></i>
                             Add Subtopic
@@ -133,96 +185,80 @@ const Accordian = (props: {
     );
 };
 
-const IntroductionForm = () => {
+const SubtopicForm = (props: {
+    addTopicIndex: number,
+    editTopicIndex: number,
+    editSubTopicIndex: number,
+    newTopics: any[],
+    addSubTopic: Function,
+    editSubTopic: Function
+}) => {
+    const [subtopicName, setSubtopicName] = useState("");
+    const [subtopicDescription, setSubtopicDescription] = useState("");
+
+    const { query } = useRouter();
+    const course = useCourseById(query.courseId ? query.courseId as string : null);
+
+    useEffect(() => {
+        if (props.editTopicIndex === null) return;
+
+        // populate the form with the current subtopic data
+        if (course !== null) {
+            const subTopic = props.newTopics[props.editTopicIndex].subTopics[props.editSubTopicIndex];
+            setSubtopicName(subTopic.name);
+            setSubtopicDescription(subTopic.description);
+        }
+    }, [course, props.editSubTopicIndex])
+
+    const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        if (props.editSubTopicIndex !== null) {
+            props.editSubTopic(props.editTopicIndex, props.editSubTopicIndex, subtopicName, subtopicDescription)
+        } else {
+            props.addSubTopic(props.addTopicIndex, subtopicName, subtopicDescription)
+        }
+    }
+
     return (
         <div className={`${styles.edit__main__container}`}>
             <Container>
-                <h2 className="mb-4">
-                    Edit Module
-                </h2>
-                {/* <p className="ms-2">Dr. Rishi Ranjan</p> */}
-                <Form>
-                    <Form.Group className="mb-3" controlId="formTitle">
-                        <Form.Label>Module Title</Form.Label>
-                        <Form.Control type="text" placeholder="Enter Module Title" className={styles.text__input} />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3" controlId="formDescription">
-                        <Form.Label>Short Description</Form.Label>
-                        <Form.Control as="textarea" rows={1} placeholder="Enter Module Description" className={styles.text__input} />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3" controlId="formDescription">
-                        <Form.Label>Module Description</Form.Label>
-                        <Form.Control as="textarea" rows={5} placeholder="Enter Module Description" className={styles.text__input} />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3" controlId="formTags">
-                        <Form.Label>Module Tags</Form.Label>
-                        <Form.Control type="text" placeholder="Enter Module Tags" className={styles.text__input} />
-                    </Form.Group>
-
-                    {/* Save */}
-                    <Button variant="primary" type="submit" className={`mt-4 ${styles.upload__dp}`}>
-                        Submit
-                    </Button>
-
-                </Form>
-            </Container>
-
-        </div >
-    );
-};
-
-const SubtopicForm = () => {
-    return (
-        <div className={`${styles.edit__main__container}`}>
-            <p>Module : Lorem ipsum dolor sit amet. / Topic 1 : Lorem ipsum dolor sit amet consectetur adipisicing.</p>
-            <Container>
-                <Form>
+                <Form onSubmit={handleFormSubmit}>
                     <Form.Group className="mb-3" controlId="formTitle">
                         <Form.Label>Subtopic Title</Form.Label>
-                        <Form.Control type="text" placeholder="Enter Subtopic Title" className={styles.text__input} />
-                    </Form.Group>
-
-                    <Form.Group className={`mb-3`} controlId="formTitle">
-                        <Form.Label>Video Link if Any: </Form.Label>
-                        <Form.Control type="text" placeholder="Enter Subtopic Title" className={`${styles.text__input}`} />
+                        <Form.Control
+                            type="text"
+                            placeholder="Enter Subtopic Title"
+                            className={styles.text__input}
+                            value={subtopicName}
+                            onChange={(e) => setSubtopicName(e.target.value)} // Update subtopic name state
+                        />
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formDescription">
-                        {/* https://codepen.io/ronhook/pen/jQZYxj */}
                         <Form.Label>Subtopic Theory</Form.Label>
-                        <Form.Control as="textarea" rows={10} placeholder="Enter Subtopic Description" className={`${styles.text__input} w-100`} />
+                        <Form.Control
+                            as="textarea"
+                            rows={10}
+                            placeholder="Enter Subtopic Description"
+                            className={`${styles.text__input} w-100`}
+                            value={subtopicDescription}
+                            onChange={(e) => setSubtopicDescription(e.target.value)} // Update subtopic description state
+                        />
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="formBasicLinkedIn">
-                        <div className={`${styles.input__group} align-item-center`}>
-                            <Form.Label className="mb-0">Link 1: </Form.Label>
-                            <h3>Text to Display:</h3>
-                            <Form.Control type="text" className={`${styles.text__input}`} />
-                            <h3>URL:</h3>
-                            <Form.Control type="text" className={`${styles.text__input}`} />
-                            <Button variant="danger" className={`${styles.delete__button}`}>
-                                <i aria-hidden className="fas fa-times"></i>
-                            </Button>
-                        </div>
-                        <div className={`${styles.input__group} align-item-center`}>
-                            <Form.Label className="mb-0">Link 2: </Form.Label>
-                            <h3>Text to Display:</h3>
-                            <Form.Control type="text" className={`${styles.text__input}`} />
-                            <h3>URL:</h3>
-                            <Form.Control type="text" className={`${styles.text__input}`} />
-                            <Button variant="danger" className={`${styles.delete__button}`}>
-                                <i aria-hidden className="fas fa-times"></i>
-                            </Button>
-                        </div>
-                        {/* Add New Link Field */}
-                        <Button variant="primary" className={`${styles.link__button}`}>
-                            <i aria-hidden className="fas fa-plus" /> ADD NEW LINK
+                    <Form.Group className="mb-3 d-flex gap-3 justify-content-end" controlId="formDescription" >
+                        <Button type="submit" className={`mt-4 ${styles.upload__dp}`}>
+                            SAVE
                         </Button>
-                    </Form.Group>
+                        <Button className={`mt-4 ${styles.upload__dp}`}>
+                            CANCEL
+                        </Button>
+                        <Button className={`mt-4 ${styles.delete__btn}`}>
+                            <i aria-hidden className="fas fa-trash"></i>
+                        </Button>
 
+                    </Form.Group>
                 </Form>
             </Container>
         </div>
@@ -237,16 +273,13 @@ const AddNewTopicModal = (props: {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    const [title, setTitle] = useState('');
+    const [name, setName] = useState('');
 
     const handleSubmitForm: React.FormEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
 
-        props.addTopic({
-            topic: {
-                name: title
-            }
-        });
+        props.addTopic(name);
+
         handleClose();
     }
 
@@ -265,7 +298,7 @@ const AddNewTopicModal = (props: {
                     <Modal.Body>
                         <Form.Group className="mb-3" controlId="formTitle">
                             <Form.Label>Topic Title</Form.Label>
-                            <Form.Control type="text" placeholder="Enter Topic Title" required value={title} onChange={(event) => setTitle(event.target.value)} />
+                            <Form.Control type="text" placeholder="Enter Topic Title" required value={name} onChange={(event) => setName(event.target.value)} />
                         </Form.Group>
                     </Modal.Body>
                     <Modal.Footer>

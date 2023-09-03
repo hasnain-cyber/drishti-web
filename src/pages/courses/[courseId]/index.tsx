@@ -5,7 +5,6 @@ import { Button, Container } from "react-bootstrap";
 
 const index = () => {
     const router = useRouter();
-    const { courseId } = router.query;
     const [edit_toggle, setEdit_toggle] = useState(false);
 
     return (

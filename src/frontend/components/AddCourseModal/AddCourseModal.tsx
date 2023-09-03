@@ -18,12 +18,10 @@ function AddCourseModal() {
         e.preventDefault();
 
         try {
-            const response = await addCourse({ name: title, description });
-            console.log("🚀 ~ file: AddCourseModal.tsx:23 ~ handleFormSubmit ~ response:", response);
-            alert('Course added successfully.');
+            await addCourse({ name: title, description });
+            handleClose();
         } catch (err) {
             console.log("🚀 ~ file: AddCourseModal.tsx:26 ~ handleFormSubmit ~ err:", err)
-            alert('An error occurred. Please try again later.')
         }
     }
 
@@ -46,12 +44,6 @@ function AddCourseModal() {
                         <Form.Group className="mb-3" controlId="formDescription">
                             <Form.Label>Module Description</Form.Label>
                             <Form.Control type="textarea" placeholder="Enter Module Description" value={description} onChange={(event) => setDescription(event.target.value)} />
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="formTags">
-                            {/* ToDo: Implement https://codepen.io/chaseottofy/pen/PodQNKO  */}
-                            <Form.Label>Module Tags</Form.Label>
-                            <Form.Control type="text" placeholder="Enter Module Tags">
-                            </Form.Control>
                         </Form.Group>
                         <div className="d-flex justify-content-end gap-3">
                             <Button variant="danger" onClick={handleClose}>

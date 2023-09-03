@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import useGlobalCourses from "./useGlobalCourses";
 
-export const useCourseById = (id: string | undefined) => {
+export const useCourseById = (id: string | null) => {
     const { courses } = useGlobalCourses();
-    const [course, setCourse] = useState(null);
+    const [course, setCourse] = useState<any | null>(null);
     useEffect(() => {
         if (courses && id) {
             const requiredCourse = courses.find((course: any) => course['id'] === id);
@@ -11,5 +11,5 @@ export const useCourseById = (id: string | undefined) => {
         }
     }, [courses, id]);
 
-    return { course };
+    return course;
 }

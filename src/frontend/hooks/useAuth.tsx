@@ -251,7 +251,6 @@ export default function () {
             }
 
             const responseJSON = await response.json();
-            console.log("🚀 ~ file: useAuth.tsx:254 ~ responseJSON:", responseJSON)
             return responseJSON;
         } catch (error) {
             console.log("🚀 ~ file: useAuth.tsx:52 ~ error:", error)
