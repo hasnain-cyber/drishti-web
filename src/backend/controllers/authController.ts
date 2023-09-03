@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import crypto from "crypto";
-import professorModel, { DBProfessorType } from '../models/userModels/professorModel';
+import professorModel from '../models/userModels/professorModel';
 import jsonwebtoken from 'jsonwebtoken';
 import { checkTokenValidity } from "../middlewares";
 import httpStatusCodes from "http-status-codes";
@@ -13,9 +13,9 @@ export const generateHashedPassword = (password: string, salt: string) => {
     return crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
 }
 
-export const generateDBUser = (id: string, name: string, email: string, salt: string, hashedPassword: string, department: string, institute: string, about: string, contactNumber: string, linkedIn: { name: string, url: string }) => {
-    const returnValue: DBProfessorType = {
-        id, name, email, salt, hashedPassword, department, institute, about, contactNumber, linkedIn
+export const generateDBUser = (id: string, name: string, email: string, salt: string, hashedPassword: string, department: string, institute: string, about: string, contactNumber: string, linkedIn: { name: string, url: string }, profileImageUrl: string) => {
+    const returnValue = {
+        id, name, email, salt, hashedPassword, department, institute, about, contactNumber, linkedIn, profileImageUrl
     }
     return returnValue;
 }
@@ -29,7 +29,6 @@ export const generateClientSideUser = (id: string, name: string, email: string, 
 export default {
     registerUser: async (req: NextApiRequest, res: NextApiResponse) => {
         const { name, email, password } = req.body;
-        console.log("🚀 ~ file: authController.ts:29 ~ registerUser: ~ name, email, password:", name, email, password)
 
         if (!name || !email || !password) {
             return res.status(httpStatusCodes.BAD_REQUEST).end();
@@ -58,7 +57,8 @@ export default {
             '',
             '',
             '',
-            { name: '', url: '' }
+            { name: '', url: '' },
+            ''
         )
         try {
             const user = await professorModel.create(data);
@@ -85,10 +85,7 @@ export default {
             } else {
                 const user = query[0];
                 const hashedPassword = generateHashedPassword(password, user['salt']);
-                console.log("🚀 ~ file: authController.ts:88 ~ loginUser: ~ password, user['salt']:", password, user['salt']);
-                console.log("🚀 ~ file: authController.ts:90 ~ loginUser: ~ crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex'):", crypto.pbkdf2Sync(password, user['salt'], 1000, 64, 'sha512').toString('hex'))
                 if (hashedPassword !== user['hashedPassword']) {
-                    console.log("🚀 ~ file: authController.ts:90 ~ loginUser: ~ hashedPassword:", hashedPassword, 'user[\'hashedPassword\']', user['hashedPassword']);
                     return res.status(httpStatusCodes.UNAUTHORIZED).end();
                 }
                 const clientSideData = generateClientSideUser(user.id, user.name, user.email, user.department, user.institute, user.about, user.contactNumber, user.linkedIn);

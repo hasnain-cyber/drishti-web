@@ -1,6 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import httpStatusCodes from 'http-status-codes';
-import axios from 'axios';
 import { S3 } from 'aws-sdk';
 
 export interface ILinkedIn {
@@ -112,7 +111,6 @@ export default function () {
             }
             if (response.status === httpStatusCodes.OK) {
                 const responseJSON = await response.json();
-                console.log("🚀 ~ file: useAuth.tsx:112 ~ responseJSON:", responseJSON)
                 return responseJSON;
             }
             console.log("🚀 ~ file: useAuth.tsx:112 ~ responseJSON:", response)
@@ -179,7 +177,6 @@ export default function () {
         }
     }, {
         onSuccess(data) {
-            console.log("🚀 ~ file: useAuth.tsx:59 ~ onSuccess ~ data:", data)
             if (!data) {
                 localStorage.removeItem('user');
                 queryClient.setQueryData('user', null);
@@ -190,7 +187,7 @@ export default function () {
         }
     });
 
-    const updateProfileImage = useMutation(async (data: {
+    const updateProfileImageMutation = useMutation(async (data: {
         imageFile: File
     }) => {
         try {
@@ -226,12 +223,59 @@ export default function () {
         }
     });
 
+    const changePasswordMutation = useMutation(async (data: {
+        oldPassword: string,
+        newPassword: string
+    }) => {
+        if (!userData || !userData.data) {
+            return alert('Please login to continue.');
+        }
+
+        try {
+            const response = await fetch(`/api/users/edit/password`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${userData.data?.token}`
+                },
+                body: JSON.stringify({
+                    password: data.oldPassword,
+                    newPassword: data.newPassword
+                }),
+            });
+            if (response.status === httpStatusCodes.UNAUTHORIZED) {
+                return alert('Please login to continue.');
+            }
+            if (response.status === httpStatusCodes.NOT_FOUND) {
+                return alert('Invalid credentials.');
+            }
+
+            const responseJSON = await response.json();
+            console.log("🚀 ~ file: useAuth.tsx:254 ~ responseJSON:", responseJSON)
+            return responseJSON;
+        } catch (error) {
+            console.log("🚀 ~ file: useAuth.tsx:52 ~ error:", error)
+            return null;
+        }
+    }, {
+        onSuccess(data) {
+            if (!data) {
+                localStorage.removeItem('user');
+                queryClient.setQueryData('user', null);
+                return;
+            }
+            localStorage.setItem('user', JSON.stringify(data.user));
+            queryClient.setQueryData('user', data.user);
+        }
+    });
+
     return {
         userData: (userData && userData.data) || null,
         login: loginMutation.mutateAsync,
         signUp: signUpMutation.mutateAsync,
         logout: logoutMutation.mutateAsync,
         updateUserProfileInfo: updateUserProfileMutation.mutateAsync,
-        updateProfileImage: updateProfileImage.mutateAsync
+        updateProfileImage: updateProfileImageMutation.mutateAsync,
+        changePassword: changePasswordMutation.mutateAsync
     };
 };

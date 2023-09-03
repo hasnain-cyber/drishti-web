@@ -64,7 +64,7 @@ const edit = () => {
 
 				{/* Make a main container to display the content of the selected tab */}
 				<div className={`${styles.edit__main}`}>
-					{tab === Tabs.Profile && <PofileTab />}
+					{tab === Tabs.Profile && <ProfileTab />}
 					{tab === Tabs.Security && <SecurityTab />}
 					{tab === Tabs.Courses && <CoursesTab />}
 				</div>
@@ -73,7 +73,7 @@ const edit = () => {
 	);
 }
 
-const PofileTab = () => {
+const ProfileTab = () => {
 	const { userData, updateUserProfileInfo, updateProfileImage } = useAuth();
 
 	const [email, setEmail] = useState("");
@@ -241,29 +241,60 @@ const PofileTab = () => {
 }
 
 const SecurityTab = () => {
+	const { changePassword } = useAuth(); // Assuming you only need changePassword from useAuth
+
+	const [currentPassword, setCurrentPassword] = useState("");
+	const [newPassword, setNewPassword] = useState("");
+	const [confirmPassword, setConfirmPassword] = useState("");
+
+	const handleSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		if (currentPassword === "" || newPassword === "" || confirmPassword === "") {
+			alert('Please fill all the fields.');
+			return;
+		}
+
+		if (newPassword !== confirmPassword) {
+			alert('Passwords do not match.');
+			return;
+		}
+
+		try {
+			await changePassword({
+				oldPassword: currentPassword,
+				newPassword,
+			});
+			alert('Password changed successfully.');
+		} catch (err) {
+			console.error("Error:", err);
+			alert('Something went wrong, please try again later.');
+		}
+	}
+
 	return (
 		<div className={`${styles.edit__main__container}`} id="security_tab">
 			<h1>Security</h1>
 			<p>Update Your Security Information</p>
 			<div className={`${styles.container__form}`}>
-				<Form>
+				<Form onSubmit={handleSubmitForm}>
 					<Form.Group className="mb-3" controlId="formBasicEmail">
 						<Form.Label>Email Address</Form.Label>
 						<Form.Control type="email" placeholder="anubhav.singh@iiti.ac.in" disabled className={`${styles.text__input}`} />
 					</Form.Group>
 					<Form.Group className="mb-3" controlId="formBasicPassword">
 						<Form.Label>Current Password</Form.Label>
-						<Form.Control type="password" placeholder="Enter Your Current Password" className={`${styles.text__input}`} />
+						<Form.Control type="password" placeholder="Enter Your Current Password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} className={`${styles.text__input}`} />
 					</Form.Group>
 
 					<Form.Group className="mb-3" controlId="formBasicNewPassword">
 						<Form.Label>New Password</Form.Label>
-						<Form.Control type="password" placeholder="Enter Your New Password" className={`${styles.text__input}`} />
+						<Form.Control type="password" placeholder="Enter Your New Password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className={`${styles.text__input}`} />
 					</Form.Group>
 
 					<Form.Group className="mb-3" controlId="formBasicConfirmPassword">
 						<Form.Label>Confirm Password</Form.Label>
-						<Form.Control type="password" placeholder="Confirm Your New Password" className={`${styles.text__input}`} />
+						<Form.Control type="password" placeholder="Confirm Your New Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className={`${styles.text__input}`} />
 					</Form.Group>
 
 					<Button variant="primary" type="submit" className={`mt-4 ${styles.upload__dp}`}>
