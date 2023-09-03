@@ -41,12 +41,10 @@ const index = () => {
                     </div>
                     <div className={`${styles.profile__details}`}>
                         <div className={`${styles.profile__name}`}>
-                            {/* <h1>{user && user['name']}</h1> */}
-                            <h1>{user?.name}</h1>
+                            <h1>{user?.name || 'DATA NOT AVAILABLE'}</h1>
                         </div>
                         <div className={`${styles.profile__department}`}>
-                            {/* <h2>{user && user['department']}</h2> */}
-                            <h2>{user?.department}</h2>
+                            <h2>{user?.department || 'NOT SPECIFIED'}</h2>
                         </div>
                         <div className={`${styles.social__links}`}>
                             <div className={`${styles.social__link}`}>
@@ -54,7 +52,7 @@ const index = () => {
                                     <i className="fa-solid fa-location-dot"></i>
                                 </div>
                                 <div className={`${styles.social__link__name}`}>
-                                    <h3>{user?.institute}</h3>
+                                    <h3>{user?.institute || 'NOT SPECIFIED'}</h3>
                                 </div>
                             </div>
                             <div className={`${styles.social__link}`}>
@@ -62,9 +60,13 @@ const index = () => {
                                     <i className="fa-solid fa-envelope"></i>
                                 </div>
                                 <div className={`${styles.social__link__name}`}>
-                                    <a href={`mailto: ${user?.email}`} target="_blank" rel="norefferer" className="text-decoration-none">
-                                        <h3>{user?.email}</h3>
-                                    </a>
+                                    {user?.email ? (
+                                        <a href={`mailto:${user.email}`} target="_blank" rel="noreferrer" className="text-decoration-none">
+                                            <h3>{user.email}</h3>
+                                        </a>
+                                    ) : (
+                                        <h3>NOT SPECIFIED</h3>
+                                    )}
                                 </div>
                             </div>
                             <div className={`${styles.social__link}`}>
@@ -72,9 +74,13 @@ const index = () => {
                                     <i className="fa-brands fa-linkedin"></i>
                                 </div>
                                 <div className={`${styles.social__link__name}`}>
-                                    <a href={user?.linkedIn.url} target="_blank" rel="norefferer" className="text-decoration-none">
-                                        <h3>{user?.linkedIn.name}</h3>
-                                    </a>
+                                    {user?.linkedIn?.url ? (
+                                        <a href={user.linkedIn.url} target="_blank" rel="noreferrer" className="text-decoration-none">
+                                            <h3>{user.linkedIn.name || 'NOT SPECIFIED'}</h3>
+                                        </a>
+                                    ) : (
+                                        <h3>NOT SPECIFIED</h3>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -89,7 +95,7 @@ const index = () => {
                                 <i className="fa-solid fa-phone"></i>
                             </div>
                             <div className={`${styles.left__element__name}`}>
-                                <h3>{user?.contactNumber}</h3>
+                                <h3>{user?.contactNumber || 'NOT SPECIFIED'}</h3>
                             </div>
                         </div>
                         <div className={`${styles.left__element}`}>
@@ -97,7 +103,7 @@ const index = () => {
                                 <i className="fa-solid fa-envelope"></i>
                             </div>
                             <div className={`${styles.left__element__name}`}>
-                                <h3>{user?.email}</h3>
+                                <h3>{user?.email || 'NOT SPECIFIED'}</h3>
                             </div>
                         </div>
                     </div>
@@ -107,7 +113,7 @@ const index = () => {
                         <div className={`${styles.right__element}`}>
                             <h1>About Me</h1>
                             <p>
-                                {user?.about}
+                                {user?.about || 'NOT SPECIFIED'}
                             </p>
                         </div>
                     </div>
@@ -125,19 +131,16 @@ const CoursesSection = (props: { userId: string }) => {
     return (
         <div className={`${styles.right__element}`}>
             <h1>Courses</h1>
-            {/* Render 6 Course Cards */}
-            {
-                courses.map((course, index) => {
-                    return (
-                        <CourseCard key={index} data={{
-                            name: course.name
-                        }} />
-                    )
-                })
-            }
+            {courses.length === 0 ? (
+                <p>NO COURSES AVAILBLE</p>
+            ) : (
+                courses.map((course, index) => (
+                    <CourseCard key={index} data={{ name: course.name }} />
+                ))
+            )}
         </div>
-    )
-}
+    );
+};
 
 const CourseCard = (props: { data: any }) => {
     const router = useRouter();

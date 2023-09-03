@@ -1,5 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import httpStatusCodes from 'http-status-codes';
+import axios from 'axios';
+import { S3 } from 'aws-sdk';
 
 export interface ILinkedIn {
     name: string;
@@ -133,12 +135,8 @@ export default function () {
     });
 
     const logoutMutation = useMutation(async () => {
-        return null;
-    }, {
-        onSuccess: (data) => {
-            localStorage.removeItem('user');
-            queryClient.setQueryData('user', data);
-        }
+        localStorage.removeItem('user');
+        queryClient.setQueryData('user', null);
     });
 
     const updateUserProfileMutation = useMutation(async (data: {
@@ -174,7 +172,6 @@ export default function () {
             }
 
             const responseJSON = await response.json();
-            console.log("🚀 ~ file: useAuth.tsx:149 ~ responseJSON:", responseJSON)
             return responseJSON;
         } catch (error) {
             console.log("🚀 ~ file: useAuth.tsx:52 ~ error:", error)
@@ -193,11 +190,48 @@ export default function () {
         }
     });
 
+    const updateProfileImage = useMutation(async (data: {
+        imageFile: File
+    }) => {
+        try {
+            const s3 = new S3({
+                accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
+                secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY
+            });
+
+            if (!userData.data) return alert("Please login to continue.")
+
+            const uploadParams = {
+                Bucket: process.env.NEXT_PUBLIC_AWS_PROFILE_PICTURE_BUCKET!,
+                Key: userData.data.id,
+                Body: data.imageFile,
+                ContentType: 'multipart/form-data',
+            };
+
+            try {
+                s3.upload(uploadParams).promise().then((response) => {
+                    console.log("🚀 ~ file: useAuth.tsx:214 ~ awaits3.upload ~ response:", response)
+                }).catch((error) => {
+                    console.log("🚀 ~ file: useAuth.tsx:216 ~ s3.upload ~ error:", error)
+                })
+                return null;
+            } catch (error) {
+                console.error('Error uploading to S3:', error);
+                return null;
+            }
+
+        } catch (error) {
+            console.log("🚀 ~ file: useAuth.tsx:52 ~ error:", error)
+            return null;
+        }
+    });
+
     return {
         userData: (userData && userData.data) || null,
         login: loginMutation.mutateAsync,
         signUp: signUpMutation.mutateAsync,
         logout: logoutMutation.mutateAsync,
-        updateUserProfile: updateUserProfileMutation.mutateAsync
+        updateUserProfileInfo: updateUserProfileMutation.mutateAsync,
+        updateProfileImage: updateProfileImage.mutateAsync
     };
 };

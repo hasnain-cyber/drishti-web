@@ -9,7 +9,6 @@ export const checkTokenValidity = async (req: NextApiRequest, res: NextApiRespon
     }
 
     const token = req.headers.authorization.split(' ')[1];
-    console.log("🚀 ~ file: middlewares.ts:12 ~ checkTokenValidity ~ token:", token)
     let decoded: any;
     try {
         decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET as string);

@@ -54,20 +54,8 @@ export default dynamoose.model('Professor', {
         }),
         required: true,
     },
+    profileImageUrl: {
+        type: String,
+        required: true,
+    },
 });
-
-export interface DBProfessorType {
-    id: string;
-    name: string;
-    email: string;
-    hashedPassword: string;
-    salt: string;
-    department: string;
-    institute: string;
-    about: string;
-    contactNumber: string;
-    linkedIn: {
-        name: string;
-        url: string;
-    }
-}

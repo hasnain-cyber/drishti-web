@@ -66,13 +66,14 @@
 
 .login_card_body_input input {
     width: 100%;
-    border: none;
-    outline: none;
     background-color: transparent;
     font-size: 1rem;
     font-family: var(--font3);
     font-weight: 200;
     color: grey;
+
+    border: none !important;
+    box-shadow: none !important;
 }
 
 .forgot {
@@ -80,6 +81,7 @@
     font-size: 0.8rem;
     font-family: var(--font3);
 }
+
 .forgot a {
     color: var(--col1);
     text-decoration: none;
@@ -96,6 +98,7 @@
     font-size: 0.9rem;
     font-family: var(--font3);
 }
+
 .signup a {
     color: var(--col1);
     text-decoration: none;
@@ -126,12 +129,15 @@
     .login {
         background: url(../../public/assets/graphics/back3.jpg) no-repeat center center/cover;
     }
+
     .container {
         flex-direction: column;
     }
+
     .title {
         display: none;
     }
+
     .login_card {
         width: 90%;
         margin-top: 150px;

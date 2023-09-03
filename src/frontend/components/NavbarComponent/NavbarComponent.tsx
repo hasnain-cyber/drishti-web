@@ -4,8 +4,15 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { Button } from 'react-bootstrap';
+import useAuth from '@/frontend/hooks/useAuth';
 
 const NavbarComponent = () => {
+    const { userData, logout } = useAuth();
+
+    const handleClickLogout = () => {
+        logout();
+    }
+
     return (
         <Navbar bg="light" expand="lg" sticky='top'>
             <Container>
@@ -17,8 +24,16 @@ const NavbarComponent = () => {
                         <Nav.Link as={NavLink} href="/courses" className={styles.navhover}>Courses</Nav.Link>
                     </Nav>
                     <Nav className='d-flex align-items-center'>
-                        <Nav.Link as={NavLink} href="/signup" className={styles.navhover}>Sign Up</Nav.Link>
-                        <NavLink href="/login"><Button className={`mx-2 ${styles.loginbutton}`}>Login</Button></NavLink>
+                        {userData === null ?
+                            <>
+                                <Nav.Link as={NavLink} href="/signup" className={styles.navhover}>Sign Up</Nav.Link>
+                                <NavLink href="/login"><Button className={`mx-2 ${styles.loginbutton}`}>Login</Button></NavLink>
+                            </>
+                            :
+                            <>
+                                <Button className={`mx-2 ${styles.loginbutton}`} onClick={handleClickLogout}>Logout</Button>
+                            </>
+                        }
                     </Nav>
                 </Navbar.Collapse>
             </Container>

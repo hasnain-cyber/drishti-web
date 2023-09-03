@@ -4,6 +4,12 @@ import crypto from "crypto";
 import { generateClientSideUser, generateHashedPassword } from "./authController";
 import { checkTokenValidity } from "../middlewares";
 import httpStatusCodes from "http-status-codes";
+import { createReadStream } from "fs";
+import multer from "multer";
+import { S3 } from "aws-sdk";
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 export default {
     getAllUsers: async (req: NextApiRequest, res: NextApiResponse) => {
@@ -12,7 +18,7 @@ export default {
             users: users
         });
     },
-    updateUser: (req: NextApiRequest, res: NextApiResponse) => {
+    updateUserInfo: (req: NextApiRequest, res: NextApiResponse) => {
         checkTokenValidity(req, res, async (decoded: any) => {
             const { name, department, institute, contactNumber, linkedIn, about } = req.body;
             try {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ChangeEvent, useRef } from "react";
 import useAuth from "@/frontend/hooks/useAuth";
 import { useRouter } from "next/router";
 import { MouseEventHandler, useState } from "react";
@@ -74,9 +74,7 @@ const edit = () => {
 }
 
 const PofileTab = () => {
-	const { userData } = useAuth();
-	const { updateUserProfile } = useAuth();
-
+	const { userData, updateUserProfileInfo, updateProfileImage } = useAuth();
 
 	const [email, setEmail] = useState("");
 	const [name, setName] = useState("");
@@ -108,7 +106,7 @@ const PofileTab = () => {
 		e.preventDefault();
 
 		try {
-			const response = await updateUserProfile({
+			const response = await updateUserProfileInfo({
 				name,
 				department,
 				institute,
@@ -124,8 +122,36 @@ const PofileTab = () => {
 			alert("Something went wrong, please try again later");
 			console.log("🚀 ~ file: edit.tsx:117 ~ handleSubmitForm ~ error", error)
 		}
-
 	}
+
+	const imageInputRef = useRef(null);
+	const handleClickUpdateImage: React.MouseEventHandler<HTMLButtonElement> = (event) => {
+		if (imageInputRef.current) {
+			(imageInputRef.current as any).click();
+		}
+	}
+
+	const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+		if (!event.target.files) {
+			console.log("No file selected");
+			return;
+		}
+
+		const file = event.target.files[0];
+		if (file) {
+			if (!window.confirm('Do you really want to upload this image?')) return;
+
+			try {
+				const response = await updateProfileImage({
+					imageFile: file
+				});
+				alert('Image uploaded successfully.');
+			} catch (error) {
+				alert('Something went wrong, please try again later.')
+				console.log("🚀 ~ file: edit.tsx:145 ~ handleFileChange ~ error:", error)
+			}
+		}
+	};
 
 	return (
 		<div className={`${styles.edit__main__container}`} id="profile_tab">
@@ -134,7 +160,14 @@ const PofileTab = () => {
 			<div className={`${styles.profile__picture}`}>
 				<img src="/assets/profile/dp.jpg" alt="profile" className={`${styles.dp__image}`} />
 				<div className={`${styles.edit__dp}`} >
-					<Button className={`${styles.upload__dp}`}>Update Image</Button>
+					<input
+						type="file"
+						accept="image/*" // Set the file type to accept only images
+						onChange={handleFileChange}
+						style={{ display: 'none' }}
+						ref={imageInputRef}
+					/>
+					<Button className={`${styles.upload__dp}`} onClick={handleClickUpdateImage}>Update Image</Button>
 					<Button className={`${styles.remove__dp}`}><i className="fa-solid fa-trash" />Remove</Button>
 				</div>
 			</div>

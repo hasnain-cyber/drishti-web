@@ -4,7 +4,7 @@ import usersController from '@/backend/controllers/usersController';
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
     switch (req.method) {
         case 'PUT':
-            usersController.updateUser(req, res);
+            usersController.updateUserInfo(req, res);
             break;
         default:
             res.status(405).json({
