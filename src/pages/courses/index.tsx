@@ -2,20 +2,25 @@ import CourseCardComponent from '@/frontend/components/CourseCardComponent/Cours
 import React from 'react'
 import { Container } from 'react-bootstrap'
 import styles from '../../styles/courses.module.css'
+import useGlobalCourses from '@/frontend/hooks/useGlobalCourses'
 
 export default function index() {
+    const { courses } = useGlobalCourses();
+
     return (
         <div className={`${styles.courses__body}`}>
             <div className={`${styles.top__container}`}>
                 <h1>Courses</h1>
             </div>
             <Container className={`py-5 d-flex flex-wrap justify-content-between`}>
-                {
-                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => {
+                {courses ?
+                    courses.map((course, index) => {
                         return (
-                            <CourseCardComponent key={index} />
+                            <CourseCardComponent key={index} courseId={course.id} />
                         )
                     })
+                    :
+                    <h1>No Courses Available</h1>
                 }
             </Container>
         </ div>

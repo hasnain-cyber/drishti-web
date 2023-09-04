@@ -14,10 +14,17 @@ export default function () {
                 }
             });
             const responseJSON = await response.json();
-            return responseJSON['courses'];;
+            if (response.status === httpStatusCodes.INTERNAL_SERVER_ERROR) {
+                alert('Could not fetch courses.');
+                return null;
+            }
+            if (response.status === httpStatusCodes.OK) {
+                return responseJSON.courses || null;
+            }
+            return null;
         } catch (error) {
             console.log("🚀 ~ file: useGlobalCourses.tsx:19 ~ const{data,status}=useQuery<any[],Error> ~ error:", error)
-            return [];
+            return null;
         }
     });
 

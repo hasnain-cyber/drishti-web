@@ -15,10 +15,15 @@ export const generateClientSideCourse = (id: string, name: string, description: 
 }
 
 export async function getAllCourses(req: NextApiRequest, res: NextApiResponse) {
-    const courses = await courseModel.scan().exec();
-    res.status(httpStatusCodes.OK).json({
-        courses: courses
-    });
+    try {
+        const courses = await courseModel.scan().exec();
+        res.status(httpStatusCodes.OK).json({
+            courses: courses
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).end();
+    }
 }
 
 export async function addCourse(req: NextApiRequest, res: NextApiResponse) {
