@@ -6,7 +6,7 @@ import { checkTokenValidity } from "../middlewares";
 import httpStatusCodes from "http-status-codes";
 
 export const generateJWTToken = (id: string) => {
-    return jsonwebtoken.sign({ id }, process.env.JWT_SECRET as string, { expiresIn: '1h' });
+    return jsonwebtoken.sign({ id }, process.env.JWT_SECRET as string);
 }
 
 export const generateHashedPassword = (password: string, salt: string) => {

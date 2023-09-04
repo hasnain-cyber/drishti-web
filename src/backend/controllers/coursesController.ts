@@ -67,8 +67,7 @@ export async function getCourseById(req: NextApiRequest, res: NextApiResponse) {
 export async function updateCourse(req: NextApiRequest, res: NextApiResponse) {
     checkTokenValidity(req, res, async (user: any) => {
         const requestUserId = user['id'];
-
-        const { id, name, description, topics } = req.body;
+        const { id, name, description, topics } = req.body
         if (!id) {
             return res.status(httpStatusCodes.BAD_REQUEST).end();
         }
@@ -88,7 +87,7 @@ export async function updateCourse(req: NextApiRequest, res: NextApiResponse) {
             if (description && description !== '') course.description = description;
             if (topics) course.topics = topics;
 
-            await courseModel.save();
+            await course.save();
             return res.status(httpStatusCodes.OK).json({
                 course: generateClientSideCourse(course.id, course.name, course.description, course.topics, course.ownerId)
             });

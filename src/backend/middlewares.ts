@@ -13,7 +13,8 @@ export const checkTokenValidity = async (req: NextApiRequest, res: NextApiRespon
     try {
         decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET as string);
     } catch (err) {
-        return res.status(httpStatusCodes.UNAUTHORIZED);
+        console.log(err);
+        return res.status(httpStatusCodes.UNAUTHORIZED).end();
     }
 
     const userId = decoded['id'];

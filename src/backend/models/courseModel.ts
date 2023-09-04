@@ -5,7 +5,7 @@ const subTopicSchema = new dynamoose.Schema({
         type: String,
         required: true,
     },
-    content: {
+    description: {
         type: String,
         required: true,
     },

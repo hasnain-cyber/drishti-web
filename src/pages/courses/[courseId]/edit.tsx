@@ -8,7 +8,7 @@ const edit = () => {
     const [edit_toggle, setEdit_toggle] = useState(false);
     // get courseId from url
     const { query } = useRouter();
-    const course = useCourseById(query.courseId ? query.courseId as string : null);
+    const { course, updateCourse } = useCourseById(query.courseId ? query.courseId as string : null);
     const currentTopics = course ? course.topics : null;
     const [newTopics, setNewTopics] = useState<any>(currentTopics);
 
@@ -94,6 +94,20 @@ const edit = () => {
         }
     }
 
+    const handleClickSave = async () => {
+        if (window.confirm("Are you sure you want to save all the changes?")) {
+            try {
+                await updateCourse({
+                    name: course.name,
+                    description: course.description,
+                    topics: newTopics
+                });
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    }
+
     return (
         <div className={`${styles.profile__body}`}>
             {/* Frontend */}
@@ -125,9 +139,7 @@ const edit = () => {
                         {<AddNewTopicModal addTopic={addTopic} />}
                     </div>
                     <div className={`${styles.edit__sidebar__header} py-0`}>
-                        <Button variant="light" className="w-100 text-center justify-content-center" onClick={(event) => {
-
-                        }}>
+                        <Button variant="light" className="w-100 text-center justify-content-center" onClick={handleClickSave}>
                             <i aria-hidden className="ms-0 mb-0 me-2 fas fa-arrow-left"></i>
                             Save and Exit
                         </Button>
