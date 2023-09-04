@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Button, Container } from "react-bootstrap";
 
 const index = () => {
-    const router = useRouter();
     const [edit_toggle, setEdit_toggle] = useState(false);
 
     return (

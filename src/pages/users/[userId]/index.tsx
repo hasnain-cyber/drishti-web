@@ -6,12 +6,13 @@ import { Card } from "react-bootstrap";
 import styles from "../../../styles/profile.module.css"
 import { useEffect, useState } from "react";
 import useGlobalCourses from "@/frontend/hooks/useGlobalCourses";
+import { useCourseById } from "@/frontend/hooks/useCourseById";
 
 const index = () => {
     const router = useRouter();
     const { userId } = router.query;
     // user is the user whose profile is being viewed
-    const user = useUserById(userId as string);
+    const { userData: profileData } = useUserById(userId as string);
     // userData is the logged in user
     const { userData } = useAuth();
 
@@ -27,7 +28,7 @@ const index = () => {
 
     return (
         <div className={`${styles.profile__body}`}>
-            {userData && user && userData['id'] === user['id'] && (
+            {userData && profileData && userData['id'] === profileData['id'] && (
                 <div className={`${styles.edit__button} d-flex align-items-center`} onClick={() => router.push(`/users/${userId}/edit`)}>
                     <i className="fa-solid fa-edit"></i>
                     Edit Profile
@@ -41,10 +42,10 @@ const index = () => {
                     </div>
                     <div className={`${styles.profile__details}`}>
                         <div className={`${styles.profile__name}`}>
-                            <h1>{user?.name || 'DATA NOT AVAILABLE'}</h1>
+                            <h1>{profileData?.name || 'DATA NOT AVAILABLE'}</h1>
                         </div>
                         <div className={`${styles.profile__department}`}>
-                            <h2>{user?.department || 'NOT SPECIFIED'}</h2>
+                            <h2>{profileData?.department || 'NOT SPECIFIED'}</h2>
                         </div>
                         <div className={`${styles.social__links}`}>
                             <div className={`${styles.social__link}`}>
@@ -52,7 +53,7 @@ const index = () => {
                                     <i className="fa-solid fa-location-dot"></i>
                                 </div>
                                 <div className={`${styles.social__link__name}`}>
-                                    <h3>{user?.institute || 'NOT SPECIFIED'}</h3>
+                                    <h3>{profileData?.institute || 'NOT SPECIFIED'}</h3>
                                 </div>
                             </div>
                             <div className={`${styles.social__link}`}>
@@ -60,9 +61,9 @@ const index = () => {
                                     <i className="fa-solid fa-envelope"></i>
                                 </div>
                                 <div className={`${styles.social__link__name}`}>
-                                    {user?.email ? (
-                                        <a href={`mailto:${user.email}`} target="_blank" rel="noreferrer" className="text-decoration-none">
-                                            <h3>{user.email}</h3>
+                                    {profileData?.email ? (
+                                        <a href={`mailto:${profileData.email}`} target="_blank" rel="noreferrer" className="text-decoration-none">
+                                            <h3>{profileData.email}</h3>
                                         </a>
                                     ) : (
                                         <h3>NOT SPECIFIED</h3>
@@ -74,9 +75,9 @@ const index = () => {
                                     <i className="fa-brands fa-linkedin"></i>
                                 </div>
                                 <div className={`${styles.social__link__name}`}>
-                                    {user?.linkedIn?.url ? (
-                                        <a href={user.linkedIn.url} target="_blank" rel="noreferrer" className="text-decoration-none">
-                                            <h3>{user.linkedIn.name || 'NOT SPECIFIED'}</h3>
+                                    {profileData?.linkedIn?.url ? (
+                                        <a href={profileData.linkedIn.url} target="_blank" rel="noreferrer" className="text-decoration-none">
+                                            <h3>{profileData.linkedIn.name || 'NOT SPECIFIED'}</h3>
                                         </a>
                                     ) : (
                                         <h3>NOT SPECIFIED</h3>
@@ -95,7 +96,7 @@ const index = () => {
                                 <i className="fa-solid fa-phone"></i>
                             </div>
                             <div className={`${styles.left__element__name}`}>
-                                <h3>{user?.contactNumber || 'NOT SPECIFIED'}</h3>
+                                <h3>{profileData?.contactNumber || 'NOT SPECIFIED'}</h3>
                             </div>
                         </div>
                         <div className={`${styles.left__element}`}>
@@ -103,7 +104,7 @@ const index = () => {
                                 <i className="fa-solid fa-envelope"></i>
                             </div>
                             <div className={`${styles.left__element__name}`}>
-                                <h3>{user?.email || 'NOT SPECIFIED'}</h3>
+                                <h3>{profileData?.email || 'NOT SPECIFIED'}</h3>
                             </div>
                         </div>
                     </div>
@@ -113,11 +114,11 @@ const index = () => {
                         <div className={`${styles.right__element}`}>
                             <h1>About Me</h1>
                             <p>
-                                {user?.about || 'NOT SPECIFIED'}
+                                {profileData?.about || 'NOT SPECIFIED'}
                             </p>
                         </div>
                     </div>
-                    <CoursesSection userId={user && user.id ? user.id : ''} />
+                    <CoursesSection userId={profileData && profileData.id ? profileData.id : ''} />
                 </div>
             </div>
         </div>
@@ -135,30 +136,35 @@ const CoursesSection = (props: { userId: string }) => {
                 <p>NO COURSES AVAILBLE</p>
             ) : (
                 courses.map((course, index) => (
-                    <CourseCard key={index} data={{ name: course.name }} />
+                    <CourseCard key={index} id={course.id} />
                 ))
             )}
         </div>
     );
 };
 
-const CourseCard = (props: { data: any }) => {
+const CourseCard = (props: { id: string }) => {
     const router = useRouter();
+
+    const { course } = useCourseById(props.id);
+    const { userData } = useUserById(course ? course.ownerId : null);
+
     return (
         <div>
-            <Card className={`${styles.coursecard}`} onClick={() => router.push(`courses/falanademkana`)} role={'button'}>
+            <Card className={`${styles.coursecard}`} onClick={() => router.replace(`/courses/${course.id}`)} role={'button'}>
                 <Card.Body>
                     <div className={`d-flex ${styles.card__text}`}>
                         <div className={styles.avatar}><i className="fa-solid fa-book-open"></i></div>
                         <div className={styles.result__content}>
-                            <div className={styles.result__title}>{props.data.name}</div>
-                            <div className={styles.result__subtitle}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis veritatis iste odit ad deserunt eaque a provident nisi sapiente recusandae.</div>
-                            <div className={styles.topics}>
-                                <div className={styles.topic}>Tag 1</div>
-                                <div className={styles.topic}>Tag 2</div>
-                                <div className={styles.topic}>Tag 3</div>
+                            <div className={styles.result__title}>{course && course.name}</div>
+                            <div className={styles.result__subtitle}>
+                                {course && course.description && course.description !== null ?
+                                    course.description
+                                    :
+                                    'NOT SPECIFIED'
+                                }
                             </div>
-                            <div className={styles.result__instructor}>Uploaded By: <span>B.K. Lad</span></div>
+                            <div className={styles.result__instructor}>Uploaded By: <span>{userData && userData.name}</span></div>
                         </div>
                     </div>
                 </Card.Body>
