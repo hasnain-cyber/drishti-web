@@ -65,7 +65,38 @@ export async function getCourseById(req: NextApiRequest, res: NextApiResponse) {
 }
 
 export async function updateCourse(req: NextApiRequest, res: NextApiResponse) {
-    return res.status(httpStatusCodes.OK).end();
+    checkTokenValidity(req, res, async (user: any) => {
+        const requestUserId = user['id'];
+
+        const { id, name, description, topics } = req.body;
+        if (!id) {
+            return res.status(httpStatusCodes.BAD_REQUEST).end();
+        }
+
+        try {
+            const courses = await courseModel.query('id').eq(id).exec();
+            if (courses.length === 0) {
+                return res.status(httpStatusCodes.NOT_FOUND).end();
+            }
+
+            const course = courses[0];
+            if (course.ownerId !== requestUserId) {
+                return res.status(httpStatusCodes.UNAUTHORIZED).end();
+            }
+
+            if (name && name !== '') course.name = name;
+            if (description && description !== '') course.description = description;
+            if (topics) course.topics = topics;
+
+            await courseModel.save();
+            return res.status(httpStatusCodes.OK).json({
+                course: generateClientSideCourse(course.id, course.name, course.description, course.topics, course.ownerId)
+            });
+        } catch (err) {
+            console.log(err);
+            return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).end();
+        }
+    });
 }
 
 export async function deleteCourse(req: NextApiRequest, res: NextApiResponse) {

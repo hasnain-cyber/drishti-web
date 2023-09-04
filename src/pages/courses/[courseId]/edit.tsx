@@ -73,9 +73,23 @@ const edit = () => {
     }
 
     const deleteTopic = (topicIndex: number) => {
+        if (topicIndex >= newTopics.length) {
+            return alert("Invalid topic selected for deletion.");
+        }
         if (window.confirm("Are you sure you want to delete this topic?")) {
             const newTopicsArray = [...newTopics];
             newTopicsArray.splice(topicIndex, 1);
+            setNewTopics(newTopicsArray);
+        }
+    }
+
+    const deleteSubTopic = (topicIndex: number, subTopicIndex: number) => {
+        if (topicIndex >= newTopics.length || subTopicIndex >= newTopics[topicIndex].subTopics.length) {
+            return alert("Invalid topic or subtopic selected for deletion.");
+        }
+        if (window.confirm("Are you sure you want to delete this subtopic?")) {
+            const newTopicsArray = [...newTopics];
+            newTopicsArray[topicIndex].subTopics.splice(subTopicIndex, 1);
             setNewTopics(newTopicsArray);
         }
     }
@@ -127,7 +141,7 @@ const edit = () => {
                             addTopicIndex={addTopicIndex} editTopicIndex={editTopicIndex}
                             editSubTopicIndex={editSubTopicIndex}
                             addSubTopic={addSubTopic} editSubTopic={editSubTopic}
-                            newTopics={newTopics}
+                            newTopics={newTopics} deleteSubTopic={deleteSubTopic}
                         />
                         :
                         <>
@@ -206,7 +220,8 @@ const SubtopicForm = (props: {
     editSubTopicIndex: number,
     newTopics: any[],
     addSubTopic: Function,
-    editSubTopic: Function
+    editSubTopic: Function,
+    deleteSubTopic: Function
 }) => {
     const [subtopicName, setSubtopicName] = useState("");
     const [subtopicDescription, setSubtopicDescription] = useState("");
@@ -269,9 +284,14 @@ const SubtopicForm = (props: {
                         <Button className={`mt-4 ${styles.upload__dp}`}>
                             CANCEL
                         </Button>
-                        <Button className={`mt-4 ${styles.delete__btn}`}>
-                            <i aria-hidden className="fas fa-trash"></i>
-                        </Button>
+                        {props.editSubTopicIndex !== null ?
+                            <Button className={`mt-4 ${styles.delete__btn}`} onClick={() => props.deleteSubTopic(props.editTopicIndex, props.editSubTopicIndex)}>
+                                <i aria-hidden className="fas fa-trash"></i>
+                            </Button>
+                            :
+                            <>
+                            </>
+                        }
 
                     </Form.Group>
                 </Form>
