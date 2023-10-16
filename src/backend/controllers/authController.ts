@@ -1,158 +1,118 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import crypto from "crypto";
-import userModel, { EUserRole } from '../models/userModel';
+import professorModel from '../models/userModels/professorModel';
 import jsonwebtoken from 'jsonwebtoken';
-import { LoggedInUser } from "@/frontend/hooks/useAuth";
 import { checkTokenValidity } from "../middlewares";
+import httpStatusCodes from "http-status-codes";
 
-const getSignedToken = (id: string, name: string, email: string, role: string) => {
-    return jsonwebtoken.sign({ id, name, email, role }, process.env.JWT_SECRET as string);
+export const generateJWTToken = (id: string) => {
+    return jsonwebtoken.sign({ id }, process.env.JWT_SECRET as string);
 }
 
-export async function loginUser(req: NextApiRequest, res: NextApiResponse) {
-    if (!req.headers.authorization) {
-        res.status(400).json({ message: 'Email and password are required.' });
-        return;
-    }
-
-    const email = req.headers.authorization.split(' ')[1].split(':')[0];
-    const password = req.headers.authorization.split(' ')[1].split(':')[1];
-
-    if (!email) {
-        res.status(400).json({ message: 'Email is required' });
-        return;
-    }
-    if (!password) {
-        res.status(400).json({ message: 'Password is required' });
-        return;
-    }
-
-    const existingUser = await userModel.scan().where('email').eq(email).exec();
-    if (existingUser.length === 0) {
-        res.status(404).json({ message: 'Email does not exist.' });
-        return;
-    }
-
-    const user = existingUser[0];
-    const hashedPassword = crypto.pbkdf2Sync(password, user['salt'], 1000, 64, 'sha512').toString('hex');
-    if (hashedPassword !== user['hashedPassword']) {
-        res.status(400).json({ message: 'Password is incorrect.' });
-        return;
-    }
-    const token = getSignedToken(user.id, user.name, user.email, user.role);
-
-    res.status(200).json({
-        user: {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-            token
-        }
-    });
+export const generateHashedPassword = (password: string, salt: string) => {
+    return crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
 }
 
-export async function registerUser(req: NextApiRequest, res: NextApiResponse) {
-    const { name } = req.body;
-    const email = req.headers.authorization?.split(' ')[1].split(':')[0];
-    const password = req.headers.authorization?.split(' ')[1].split(':')[1];
-
-    if (!name) {
-        res.status(400).json({ message: 'Name is required' });
-        return;
+export const generateDBUser = (id: string, name: string, email: string, salt: string, hashedPassword: string, department: string, institute: string, about: string, contactNumber: string, linkedIn: { name: string, url: string }, profileImageUrl: string) => {
+    const returnValue = {
+        id, name, email, salt, hashedPassword, department, institute, about, contactNumber, linkedIn, profileImageUrl
     }
-
-    if (!email) {
-        res.status(400).json({ message: 'Email is required' });
-        return;
-    }
-
-    if (!password) {
-        res.status(400).json({ message: 'Password is required' });
-        return;
-    }
-
-    const existingUser = await userModel.scan().where('email').eq(email).exec();
-    if (existingUser.length > 0) {
-        res.status(400).json({ message: 'Email already in use.' });
-        return;
-    }
-
-    const salt = crypto.randomBytes(16).toString('hex');
-    const hashedPassword = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
-
-    const user = new userModel({
-        id: crypto.randomUUID(),
-        name,
-        email,
-        hashedPassword,
-        salt,
-        verified: false,
-        role: EUserRole.Professor
-    });
-
-    const clientSideUser: LoggedInUser = {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        token: getSignedToken(user.id, user.name, user.email, user.role)
-    }
-
-    await user.save();
-    res.status(201).json({
-        user: clientSideUser
-    });
+    return returnValue;
 }
-
-export async function updateUser(req: NextApiRequest, res: NextApiResponse) {
-    checkTokenValidity(req, res, async (decoded: any) => {
-        const users = await userModel.scan().where('email').eq(decoded.email).exec();
-        if (users.length === 0) {
-            res.status(404).json({ message: 'User not found.' });
-            return;
-        }
-
-        // get the fields to update selectively from request body, so that someone could not maliciously modify other sensetive fields.
-        const { name: newName, email: newEmail, password: newPassword } = req.body;
-        const user = users[0];
-        if (newName) {
-            user['name'] = newName;
-        }
-        if (newEmail) {
-            user['email'] = newEmail;
-        }
-        if (newPassword) {
-            const salt = crypto.randomBytes(16).toString('hex');
-            const hashedPassword = crypto.pbkdf2Sync(newPassword, salt, 1000, 64, 'sha512').toString('hex');
-            user['hashedPassword'] = hashedPassword;
-            user['salt'] = salt;
-        }
-
-        const updatedUser = await user.save();
-        res.status(200).json(updatedUser);
-    });
-}
-
-export async function deleteUser(req: NextApiRequest, res: NextApiResponse) {
-    checkTokenValidity(req, res, async (decoded: any) => {
-        const users = await userModel.scan().where('email').eq(decoded.email).exec();
-        if (users.length === 0) {
-            res.status(404).json({ message: 'User not found.' });
-            return;
-        }
-
-        const user = users[0];
-        await user.delete();
-        res.status(200).json({
-            "message": "User deleted successfully."
-        });
-    });
+export const generateClientSideUser = (id: string, name: string, email: string, department: string, institute: string, about: string, contactNumber: string, linkedIn: { name: string, url: string }) => {
+    return {
+        id, name, email, department, institute, about, contactNumber, linkedIn,
+        token: generateJWTToken(id)
+    };
 }
 
 export default {
-    loginUser,
-    registerUser,
-    updateUser,
-    deleteUser
+    registerUser: async (req: NextApiRequest, res: NextApiResponse) => {
+        const { name, email, password } = req.body;
+
+        if (!name || !email || !password) {
+            return res.status(httpStatusCodes.BAD_REQUEST).end();
+        }
+
+        try {
+            const query = await professorModel.query('email').eq(email).exec();
+            if (query.length > 0) {
+                return res.status(httpStatusCodes.CONFLICT).end();
+            }
+        } catch (err) {
+            console.log("🚀 ~ file: authController.ts:41 ~ registerUser: ~ err:", err)
+            return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).end();
+        }
+
+        const salt = crypto.randomBytes(16).toString('hex');
+        const hashedPassword = generateHashedPassword(password, salt);
+
+        const data = generateDBUser(
+            crypto.randomUUID(),
+            name,
+            email,
+            salt,
+            hashedPassword,
+            '',
+            '',
+            '',
+            '',
+            { name: '', url: '' },
+            ''
+        )
+        try {
+            const user = await professorModel.create(data);
+            const clientSideData = generateClientSideUser(data.id, data.name, data.email, data.department, data.institute, data.about, data.contactNumber, data.linkedIn);
+            res.status(httpStatusCodes.CREATED).json({
+                user: clientSideData
+            });
+        } catch (error) {
+            console.log("🚀 ~ file: authController.ts:70 ~ registerUser: ~ error:", error)
+            res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).end();
+        }
+    },
+    loginUser: async (req: NextApiRequest, res: NextApiResponse) => {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(httpStatusCodes.BAD_REQUEST).end();
+        }
+
+        try {
+            const query = await professorModel.query('email').eq(email).exec();
+            if (query.length === 0) {
+                return res.status(httpStatusCodes.NOT_FOUND).end();
+            } else {
+                const user = query[0];
+                const hashedPassword = generateHashedPassword(password, user['salt']);
+                if (hashedPassword !== user['hashedPassword']) {
+                    return res.status(httpStatusCodes.UNAUTHORIZED).end();
+                }
+                const clientSideData = generateClientSideUser(user.id, user.name, user.email, user.department, user.institute, user.about, user.contactNumber, user.linkedIn);
+                res.status(httpStatusCodes.OK).json({
+                    user: clientSideData
+                });
+            }
+        } catch (err) {
+            console.log("🚀 ~ file: authController.ts:41 ~ registerUser: ~ err:", err)
+            return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).end();
+        }
+    },
+    deleteUser: async (req: NextApiRequest, res: NextApiResponse) => {
+        checkTokenValidity(req, res, async (decoded: any) => {
+            try {
+                const users = await professorModel.query('id').eq(decoded.id).exec();
+                if (users.length === 0) {
+                    return res.status(httpStatusCodes.NOT_FOUND).end();
+                }
+
+                const user = users[0];
+                await user.delete();
+                return res.status(httpStatusCodes.NO_CONTENT).end();
+            } catch (err) {
+                console.log("🚀 ~ file: authController.ts:41 ~ registerUser: ~ err:", err)
+                return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).end();
+            }
+        });
+    }
 };

@@ -1,0 +1,21 @@
+.profile__picture {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.remove__dp {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    background-color: var(--col3);
+    color: var(--col1);
+    border: 0;
+    border-radius: 1.5rem;
+    padding: 10px 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}

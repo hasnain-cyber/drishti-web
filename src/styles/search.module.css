@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: var(--grad3);
+  background: var(--col1);
   padding: 3rem 0rem;
 }
 
@@ -14,7 +14,7 @@
     background: var(--col3);
     border-radius: 1.5rem;
     width: 70%;
-
+    margin: auto;
     padding: 4px;
 }
 
@@ -88,13 +88,114 @@
     border-radius: 1.5rem;
     padding: 0.5rem 1rem;
     color: var(--col1);
-
+    margin: 0.5rem 0;
     cursor: pointer;
+}
+
+.no__results {
+    font-family: var(--font2);
+    font-size: 1.2rem;
 }
 
 .active__filter {
     background: var(--col1);
     color: var(--col3);
+}
+
+
+/* Search results */
+
+.coursecard {
+    width: clamp(300px, 95%, 600px);
+    border: 0;
+    border-radius: 1.5rem;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    padding: 1rem;
+    margin: 1.5rem auto;
+    height: 100%;
+    transition: 0.3s;
+}
+
+.coursecard:hover {
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.02);
+}
+.avatar {
+    display: flex;
+    align-items: center;
+    margin: 1rem;
+}
+
+.avatar i {
+    font-size: 2rem;
+    color: var(--col1);
+}
+
+.result__content {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin-left: 1rem;
+}
+
+.result__title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    font-family: var(--font3);
+    text-transform: uppercase;
+    color: var(--col1);
+}
+
+.result__subtitle {
+    margin-bottom: 0.5rem;
+}
+
+.result__instructor {
+    font-family: var(--font2);
+    font-size: 0.9rem;
+}
+
+.result__instructor span {
+    font-weight: 600;
+}
+
+/* Skeleton */ 
+
+.skeleton {
+    animation: skeleton 1s infinite alternate;
+    opacity: 0.7;
+}
+
+@keyframes skeleton {
+    0% {
+        background-color: hsl(200, 20%, 95%);
+    }
+    100% {
+        background-color: hsl(2000, 0%, 80%);
+    }
+}
+
+.skeleton_card {
+    width: 500px!important;
+    margin: 1rem;
+}
+
+.skeleton_avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.skeleton_text {
+    width: 100%;
+    height: 0.5rem;
+    margin-bottom: 0.2rem;
+    border-radius: 0.5rem;
+}
+
+.skeleton_text:last-child {
+    width: 80%;
 }
 
 /* media querry */ 
@@ -110,5 +211,20 @@
     .search__results h1 {
         text-align: center;
         font-size: 1.2rem;
+    }
+    .coursecard {
+        padding: 0.5rem;
+        margin: 1rem auto;
+    }
+    .avatar {
+        margin: 0.5rem;
+    }
+    .filters {
+        justify-content: center;
+    }
+    .skeleton_card {
+        width: 350px!important;
+        margin-left: 0rem;
+        margin-right: 0rem;
     }
 }

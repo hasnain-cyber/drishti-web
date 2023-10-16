@@ -1,0 +1,392 @@
+.profile__body {
+    background-color: #F6F6F6;
+    font-family: var(--font3);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+.profile__container {
+    background-color: #fff;
+    height: 350px;
+}
+
+.edit__button {
+    position: -webkit-sticky;
+    position: fixed;
+    top: 100px;
+    right: 30px;
+    background-color: #fff;
+    color: var(--col1);
+    border-radius: 2rem;
+    padding: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 5;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.edit__button:hover {
+    background-color: var(--col1);
+    color: #fff;
+}
+
+.edit__button i {
+    font-size: 1.5rem;
+    margin-right: 5px;
+}
+
+.cover__image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.main__container {
+    display: flex;
+    height: 100%;
+    position: relative;
+}
+
+.dp__container {
+    /* display: none; */
+    position: relative;
+    top: -80px;
+    left: 20%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 6px solid #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.dp__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile__details {
+    position: relative;
+    padding: 30px;
+    margin-left: 15%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-family: var(--font3);
+}
+
+.profile__name h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.profile__department h2 {
+    font-size: 1.2rem;
+    font-weight: 400;
+    margin-bottom: 5px;
+}
+
+.social__links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.social__link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    color: #ADADAD;
+    transition: all 0.3s ease;
+}
+
+.social__icon {
+    margin-right: 5px;
+}
+
+.social__link__name h3 {
+    font-size: 1rem;
+    margin-bottom: 0;
+    color: #ADADAD;
+}
+
+.social__link:hover {
+    color: #000;
+}
+
+/* Main Page */
+
+.profile__container2 {
+    width: 85%;
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+}
+
+/* Left Navigation */
+
+.profile__left {
+    width: 30%;
+    height: 100%;
+    padding: 30px;
+    text-align: center;
+    margin-top: 30px;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 80px;
+}
+
+.profile__left__container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.left__element {
+    display: flex;
+    /* color: #a1a1a1; */
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.left__element__icon {
+    margin-right: 10px;
+}
+
+.left__element__name h3 {
+    font-size: 1rem;
+    font-weight: 400;
+    margin-bottom: 0;
+}
+
+/* .domains {
+    display: flex;
+    flex-wrap: wrap;
+} */
+
+.domain {
+    display: flex;
+    align-items: center;
+    font-family: var(--font3);
+    border: 2px solid var(--col1);
+    border-radius: 1.5rem;
+    padding: 0.5rem 1rem;
+    color: var(--col1);
+    margin: 0.5rem;
+    cursor: pointer;
+    transition: 0.3s;
+    z-index: 1;
+}
+
+.domain h3 {
+    font-size: 0.8rem;
+    font-weight: 400;
+    margin-bottom: 0;
+}
+
+.domain:hover {
+    background-color: var(--col1);
+    color: #fff;
+}
+
+/* Right Navigation */
+
+.profile__right {
+    width: 70%;
+    height: 100%;
+    padding: 30px;
+    margin-top: 30px;
+}
+
+.profile__right__container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.right__element {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.right__element h1 {
+    font-size: 1.5rem;
+    text-transform: uppercase;
+}
+
+.right__element p {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #a1a1a1;
+}
+
+/* Courses */
+
+.coursecard {
+    width: 100%;
+    border: 0;
+    border-radius: 1.5rem;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    padding: 1rem;
+    margin: 0.5rem auto;
+    height: 100%;
+    transition: 0.3s;
+}
+
+.coursecard:hover {
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.02);
+}
+
+.avatar {
+    display: flex;
+    align-items: center;
+    margin: 1rem;
+}
+
+.avatar i {
+    font-size: 2rem;
+    color: var(--col1);
+}
+
+.result__content {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin-left: 1rem;
+}
+
+.result__title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    font-family: var(--font3);
+    text-transform: uppercase;
+    color: var(--col1);
+}
+
+.result__subtitle {
+    margin-bottom: 0.5rem;
+}
+
+.topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.topic {
+    display: flex;
+    align-items: center;
+    font-family: var(--font3);
+    border-radius: 1.5rem;
+    font-size: 0.8rem;
+    padding: 2px 20px;
+    /* border: 2px solid black; */
+    color: black;
+    background-color: var(--col2);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    margin: 10px 2px;
+    cursor: pointer;
+    transition: 0.3s;
+    z-index: 1;
+}
+
+.result__instructor {
+    font-family: var(--font2);
+    font-size: 0.9rem;
+}
+
+.result__instructor span {
+    font-weight: 600;
+}
+
+
+
+/* Mobile Media Querry */
+@media screen and (max-width: 1000px) {
+    .main__container {
+        flex-direction: column;
+    }
+
+    .cover__image {
+        height: 100px;
+    }
+
+    .edit__button {
+        top: 90vh;
+        right: 15px;        
+    }
+
+    .dp__container {
+        top: -40px;
+        left: 50%;
+        height: 100px;
+        width: 100px;
+    }
+
+    .profile__details {
+        margin-top: -20px;
+        margin-left: 0;
+        padding: 0px;
+        text-align: center;
+    }
+
+    .profile__name h1 {
+        font-size: 1.2rem;
+    }
+
+    .profile__department h2 {
+        font-size: 1rem;
+    }
+
+    .social__links {
+        flex-direction: column;
+        gap: 0px;
+    }
+
+    /* content */
+    .profile__container2 {
+        flex-direction: column;
+    }
+
+    .profile__left {
+        width: 100%;
+        height: 100%;
+        padding: 0px;
+        text-align: center;
+        position: relative;
+        top: 0px;
+    }
+
+    .profile__right {
+        width: 100%;
+        height: 100%;
+        padding: 0px;
+        text-align: center;
+        margin-top: 40px;
+    }
+
+    .profile__right__container {
+        gap: 25px;
+    }
+
+    .coursecard {
+        text-align: left;
+    }
+    
+    .avatar {
+        display: none;
+    }
+    .card__text {
+        flex-direction: column;
+    }
+}

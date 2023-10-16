@@ -7,7 +7,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       coursesController.getAllCourses(req, res);
       break;
     case 'POST':
-      coursesController.createCourse(req, res);
+      coursesController.addCourse(req, res);
       break;
     case 'PUT':
       coursesController.updateCourse(req, res);

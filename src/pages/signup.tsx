@@ -2,27 +2,34 @@ import Link from 'next/link'
 import React, { useState, FormEventHandler } from 'react'
 import { Container, Col, Form } from 'react-bootstrap'
 import styles from './../styles/signup.module.css';
-import authHandler from '@/frontend/apiHandlers/authHandler';
 import { useRouter } from 'next/router';
+import useAuth from '@/frontend/hooks/useAuth';
 
 export default function signup() {
-    const [name, setName] = useState<string>('')
-    const [email, setEmail] = useState<string>('')
-    const [password, setPassword] = useState<string>('')
-    const [confirmPassword, setConfirmPassword] = useState<string>('')
+    const [name, setName] = useState('')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
 
     const router = useRouter();
+    const { signUp } = useAuth();
 
     const handleSubmitForm: FormEventHandler<HTMLFormElement> = async (event) => {
         event.preventDefault();
 
         if (password !== confirmPassword) {
-            alert("Passwords don't match!")
-            return;
+            return alert("Passwords do not match.");
         }
 
-        const response = await authHandler.signup(name, email, password);
-        router.push(`/user/${response.user.id}`);
+        try {
+            const response = await signUp({ name, email, password });
+            console.log("🚀 ~ file: signup.tsx:27 ~ consthandleSubmitForm:FormEventHandler<HTMLFormElement>= ~ response:", response)
+            if (response) {
+                router.push(`/users/${response.user.id}`);
+            }
+        } catch (error) {
+            console.log("🚀 ~ file: signup.tsx:29 ~ consthandleSubmitForm:FormEventHandler<HTMLFormElement>= ~ error:", error)
+        }
     }
 
     return (
@@ -62,15 +69,6 @@ export default function signup() {
                             </div>
                         </div>
                     </Form>
-                    {/* Or use google login */}
-                    {/* <div className={styles.login_card_footer}>
-                        <div className={styles.login_card_footer_text}>
-                            <span>Or use your account</span>
-                        </div>
-                        <div className={styles.login_card_footer_social}>
-                            <i className="fab fa-google" />
-                        </div>
-                    </div> */}
                 </Col>
             </Container>
         </div>
